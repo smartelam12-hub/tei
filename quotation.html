@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEI PACKAGE | Custom Crate Quotation & Billing System</title>
+  <meta name="description" content="Official Quotation & Bill Generator for TEI PACKAGE: Plastic Crates, Bins, FLCs, Labour & Material Estimator, GST, PDF & Excel export.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23173b35'/><text x='50%' y='62%' font-size='42' font-weight='900' fill='%23c58b48' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
+</head>
+<body style="background: var(--paper);">
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div>
+      📍 <strong>TEI PACKAGE</strong> • Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu | GSTIN: 33AABCT9988A1Z2
+    </div>
+    <div class="announcement-links">
+      <a href="tel:+919842712345">📞 +91 98427 12345</a>
+      <a href="mailto:sales@teipackage.com">✉️ sales@teipackage.com</a>
+      <a href="https://wa.me/919842712345" target="_blank">💬 WhatsApp Us</a>
+    </div>
+  </div>
+
+  <!-- Multi-User Server & Database Connection Banner -->
+  <div class="server-status-strip">
+    <div class="status-pill-group">
+      <span class="live-status-pill">
+        <span class="live-pulse-dot" id="serverStatusDot"></span>
+        <span id="serverStatusText">SQLite Database Connected • Multi-User Mode Active</span>
+      </span>
+      <span class="network-access-pill" id="serverNetworkAddress">Loading server network address...</span>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-mark">TEI</div>
+        <div class="brand-info">
+          <h1>TEI PACKAGE</h1>
+          <p>Quotation & Billing Portal • teipackage.com</p>
+        </div>
+      </a>
+
+      <div class="nav-actions">
+        <a href="index.html" class="btn btn-secondary btn-sm">← Main Website</a>
+        <button class="btn btn-primary btn-sm" onclick="printActiveQuotation()">🖨️ Print / Save PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Quotation Billing App Container -->
+  <main class="quote-app-section" style="padding-top: 20px;">
+    <div class="container">
+
+      <!-- Tool Switcher Navigation (Custom Crate Estimator vs Multi-Item Tax Invoice) -->
+      <div class="tool-type-nav">
+        <button class="tool-type-btn active" id="btnToolEstimator" onclick="switchToolTab('estimator')">
+          ⚙️ Custom Crate & Bin Quotation (Labour & Materials)
+        </button>
+        <button class="tool-type-btn" id="btnToolStandard" onclick="switchToolTab('standard')">
+          📋 Multi-Item Tax Invoice & Bill Generator
+        </button>
+        <button class="tool-type-btn" id="btnToolPrint" onclick="switchToolTab('print')">
+          📄 Official A4 Bill Preview
+        </button>
+      </div>
+
+      <!-- ====================================================================
+           TOOL 1: CUSTOM CRATE & BIN QUOTATION ESTIMATOR (TEI-DEMO SPEC)
+           ==================================================================== -->
+      <div id="viewCrateEstimator">
+
+        <!-- Top Size / Quotation Tabs Bar -->
+        <div style="background: white; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+            <div>
+              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px;">Quotation Size Tabs:</span>
+            </div>
+            <div style="font-size: 12px; color: var(--muted);">
+              Current Grand Total: <strong id="estGrandTotalHeader" style="font-size: 16px; color: var(--ink);">₹0.00</strong>
+            </div>
+          </div>
+          <div class="quote-tabs-bar" id="quoteTabsContainer">
+            <!-- Tabs rendered dynamically via crate-estimator.js -->
+          </div>
+        </div>
+
+        <!-- Estimator Action Toolbar -->
+        <div class="action-bar">
+          <button class="btn btn-outline btn-sm" onclick="addNewQuoteTab()">➕ New Size Tab</button>
+          <button class="btn btn-primary btn-sm" onclick="exportEstimatorCSV()">📊 Export CSV (TEI Format)</button>
+          <label class="btn btn-outline btn-sm" style="cursor: pointer; margin-bottom: 0;">
+            📂 Import CSV
+            <input type="file" accept=".csv" onchange="importEstimatorCSV(event)" style="display: none;">
+          </label>
+          <button class="btn btn-outline btn-sm" onclick="triggerEstimatorPrint()">🖨️ Print / Save PDF</button>
+          <button class="btn btn-success btn-sm" onclick="shareEstimatorWhatsApp()">💬 Share on WhatsApp</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCurrentQuoteTab()">🗑️ Delete Tab</button>
+        </div>
+
+        <!-- Main Estimator Two-Column Layout -->
+        <div class="estimator-main-grid">
+
+          <!-- Left Column: Crate & Bin Specifications -->
+          <div>
+
+            <!-- Quotation Reference & Customer Panel -->
+            <div class="panel">
+              <div class="panel-head">
+                <h3><span>📄</span> Quotation & Customer Details</h3>
+              </div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label>Quotation No.</label>
+                  <input type="text" id="estQuoteNo" class="form-control" oninput="updateSpecField('quotationNo', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Date</label>
+                  <input type="date" id="estDate" class="form-control" oninput="updateSpecField('date', this.value)">
+                </div>
+                <div class="form-group col-span-2">
+                  <label>Customer Name</label>
+                  <input type="text" id="estCustomer" class="form-control" placeholder="Company / Client name" oninput="updateSpecField('customer', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Contact Person / Phone</label>
+                  <input type="text" id="estContact" class="form-control" placeholder="Contact person name" oninput="updateSpecField('contact', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>TEI Reference / PO</label>
+                  <input type="text" id="estReference" class="form-control" placeholder="RFQ or Reference" oninput="updateSpecField('reference', this.value)">
+                </div>
+                <div class="form-group col-span-2">
+                  <label>Delivery / Works Address</label>
+                  <textarea id="estAddress" class="form-control" rows="2" placeholder="Plant or destination address" oninput="updateSpecField('address', this.value)"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Technical Dimensions & Specifications Panel -->
+            <div class="panel">
+              <div class="panel-head">
+                <h3><span>📐</span> Crate Dimensions & Structure</h3>
+              </div>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label>TEI Part Name</label>
+                  <input type="text" id="estPartName" class="form-control" placeholder="e.g. Engine Valve Crate" oninput="updateSpecField('partName', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>TEI Part No</label>
+                  <input type="text" id="estPartNo" class="form-control" placeholder="e.g. TEI-EV-6040" oninput="updateSpecField('partNo', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Make</label>
+                  <select id="estMake" class="form-control" onchange="updateSpecField('make', this.value)">
+                    <option value="Tuff">Tuff</option>
+                    <option value="Nilkamal">Nilkamal</option>
+                    <option value="Supreme">Supreme</option>
+                    <option value="TEI Standard">TEI Standard</option>
+                  </select>
+                </div>
+
+                <!-- Outer Dimensions (OD) -->
+                <div class="form-group">
+                  <label>OD Length (mm)</label>
+                  <input type="text" id="estOdLength" class="form-control" placeholder="600" oninput="updateSpecField('odLength', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>OD Width (mm)</label>
+                  <input type="text" id="estOdWidth" class="form-control" placeholder="400" oninput="updateSpecField('odWidth', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>OD Height (mm)</label>
+                  <input type="text" id="estOdHeight" class="form-control" placeholder="325" oninput="updateSpecField('odHeight', this.value)">
+                </div>
+
+                <!-- Inner Dimensions (ID) -->
+                <div class="form-group">
+                  <label>ID Length (mm)</label>
+                  <input type="text" id="estIdLength" class="form-control" placeholder="565" oninput="updateSpecField('idLength', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>ID Width (mm)</label>
+                  <input type="text" id="estIdWidth" class="form-control" placeholder="365" oninput="updateSpecField('idWidth', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>ID Height (mm)</label>
+                  <input type="text" id="estIdHeight" class="form-control" placeholder="310" oninput="updateSpecField('idHeight', this.value)">
+                </div>
+
+                <div class="form-group">
+                  <label>Quantity (Nos)</label>
+                  <input type="number" min="1" step="1" id="estQuantity" class="form-control" value="1" oninput="updateSpecField('quantity', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Colour</label>
+                  <select id="estColour" class="form-control" onchange="updateSpecField('colour', this.value)">
+                    <option value="Green">Green</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Grey">Grey</option>
+                    <option value="Black">Black</option>
+                    <option value="Yellow">Yellow</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Bottom Type</label>
+                  <input type="text" id="estBottomType" class="form-control" placeholder="Plain / Ribbed / Reinforced" oninput="updateSpecField('bottomType', this.value)">
+                </div>
+              </div>
+
+              <!-- Extra Features & Fitments -->
+              <h4 style="font-size: 13px; color: var(--ink); margin: 18px 0 10px; border-top: 1px solid var(--line-light); padding-top: 12px;">
+                Fitments & Partition Details
+              </h4>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label>HDPE Thickness (mm)</label>
+                  <input type="text" id="estHdpeThickness" class="form-control" placeholder="e.g. 3.0" oninput="updateSpecField('hdpeThickness', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>XLPE Thickness (mm)</label>
+                  <input type="text" id="estXlpeThickness" class="form-control" placeholder="e.g. 10.0" oninput="updateSpecField('xlpeThickness', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Sheet 1 (Sheet 2) L x H x Qty</label>
+                  <input type="text" id="estSheet1" class="form-control" placeholder="550 x 350 x 2" oninput="updateSpecField('sheet1', this.value)">
+                </div>
+
+                <div class="form-group">
+                  <label>Netted Tape</label>
+                  <select id="estNettedTape" class="form-control" onchange="updateSpecField('nettedTape', this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Dust Cover</label>
+                  <select id="estDustCover" class="form-control" onchange="updateSpecField('dustCover', this.value)">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Plastic Lid</label>
+                  <select id="estPlasticLid" class="form-control" onchange="updateSpecField('plasticLid', this.value)">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Rivet Material</label>
+                  <input type="text" id="estRivetMaterial" class="form-control" placeholder="Aluminium / Plastic" oninput="updateSpecField('rivetMaterial', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Rivet Count</label>
+                  <input type="number" id="estRivetCount" class="form-control" placeholder="16" oninput="updateSpecField('rivetCount', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Screen Printing</label>
+                  <select id="estScreenPrinting" class="form-control" onchange="updateSpecField('screenPrinting', this.value)">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Card Holder Type</label>
+                  <input type="text" id="estCardHolderType" class="form-control" placeholder="Integrated PP / Acrylic" oninput="updateSpecField('cardHolderType', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Card Holder Colour</label>
+                  <input type="text" id="estCardHolderColour" class="form-control" placeholder="Transparent" oninput="updateSpecField('cardHolderColour', this.value)">
+                </div>
+                <div class="form-group">
+                  <label>Card Holder Size & Pockets</label>
+                  <input type="text" id="estCardHolderSize" class="form-control" placeholder="150x100 mm (1 pocket)" oninput="updateSpecField('cardHolderSize', this.value)">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Labour Work & Material Cost Matrix -->
+          <div>
+
+            <!-- Auto-Generated Product Description Box -->
+            <div class="product-desc-box">
+              <small>✨ Auto-Generated Product Description</small>
+              <p id="estProductDesc">Tuff plastic crate, Green colour, with netted tape, with dust cover.</p>
+            </div>
+
+            <!-- Panel: Labour / Work Operations -->
+            <div class="panel">
+              <div class="panel-head">
+                <h3><span>🛠️</span> Work / Labour Operations Costing</h3>
+                <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
+                  Labour Total: <span id="estLabourTotal">₹0.00</span>
+                </span>
+              </div>
+              <div class="table-responsive">
+                <table class="table-compact">
+                  <thead>
+                    <tr>
+                      <th>Operation</th>
+                      <th style="width: 65px; text-align: right;">Min</th>
+                      <th style="width: 55px; text-align: right;">Hrs</th>
+                      <th style="width: 70px; text-align: right;">Man-Hrs</th>
+                      <th style="width: 75px; text-align: right;">Rate (₹)</th>
+                      <th style="width: 90px; text-align: right;">Amount (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="workOpsTbody">
+                    <!-- Populated via crate-estimator.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Panel: Material Cost Breakdown (Bill of Materials) -->
+            <div class="panel">
+              <div class="panel-head">
+                <h3><span>📦</span> Material Cost Breakdown (BOM)</h3>
+                <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
+                  Material Total: <span id="estMaterialTotal">₹0.00</span>
+                </span>
+              </div>
+              <div class="table-responsive">
+                <table class="table-compact">
+                  <thead>
+                    <tr>
+                      <th>Material Component</th>
+                      <th style="width: 75px; text-align: right;">Qty</th>
+                      <th style="width: 85px; text-align: right;">Rate (₹)</th>
+                      <th style="width: 95px; text-align: right;">Amount (₹)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="materialsTbody">
+                    <!-- Populated via crate-estimator.js -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: var(--muted);">
+                <div>
+                  <label style="font-weight: 700;">Wastage % (internal indicator): </label>
+                  <input type="number" id="estWastagePercent" style="width: 60px; padding: 4px; text-align: right;" value="0" min="0" max="100" oninput="updateSpecField('wastagePercent', this.value)"> %
+                </div>
+                <div>
+                  <label style="font-weight: 700;">GST %: </label>
+                  <select id="estGstPercent" style="padding: 4px;" onchange="updateSpecField('gstPercent', this.value)">
+                    <option value="0">0% (Nil)</option>
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18" selected>18% (Standard)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel: Total Cost & Pricing Summary -->
+            <div class="summary-card">
+              <div class="summary-line">
+                <span>Unit Material Cost:</span>
+                <strong id="estMaterialTotalVal">₹0.00</strong>
+              </div>
+              <div class="summary-line">
+                <span>Unit Labour Cost:</span>
+                <strong id="estLabourTotalVal">₹0.00</strong>
+              </div>
+              <div class="summary-line" style="background: #fafcfb; padding: 10px;">
+                <span style="font-weight: 700; color: var(--ink);">Unit Finished Crate Cost:</span>
+                <strong id="estUnitCost" style="font-size: 16px; color: var(--ink);">₹0.00</strong>
+              </div>
+              <div class="summary-line">
+                <span>Subtotal (Unit Cost x Quantity):</span>
+                <strong id="estSubtotal">₹0.00</strong>
+              </div>
+              <div class="summary-line">
+                <span>GST Tax:</span>
+                <strong id="estGstAmount">₹0.00</strong>
+              </div>
+              <div class="summary-line grand-total">
+                <span>Grand Total:</span>
+                <strong id="estGrandTotal">₹0.00</strong>
+              </div>
+
+              <div class="amount-words-box">
+                <small>Amount in Words:</small>
+                <p id="estGrandTotalWords">Indian Rupees Zero Only</p>
+              </div>
+
+              <div style="margin-top: 15px;">
+                <label style="font-size: 12px; font-weight: 700; color: var(--ink);">Engineering Notes & Tolerances:</label>
+                <textarea id="estNotes" class="form-control" rows="2" placeholder="Tolerances, delivery schedule, or payment notes..." oninput="updateSpecField('notes', this.value)"></textarea>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+                <button class="btn btn-primary" onclick="triggerEstimatorPrint()">🖨️ Print Quotation</button>
+                <button class="btn btn-secondary" style="color: var(--ink); background: #e8f0ec;" onclick="switchToolTab('print')">👁️ View Official Bill</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ====================================================================
+           TOOL 2: STANDARD MULTI-ITEM TAX INVOICE BILL GENERATOR
+           ==================================================================== -->
+      <div id="viewStandardInvoice" style="display: none;">
+        
+        <!-- Standard Invoice Action Toolbar -->
+        <div class="action-bar" style="margin-bottom: 16px;">
+          <button class="btn btn-outline btn-sm" onclick="startNewQuotation()">➕ New Quotation</button>
+          <button class="btn btn-primary btn-sm" style="background:#15803d; border-color:#15803d;" onclick="saveQuotationDraft()">💾 Save to Database</button>
+          <button class="btn btn-outline btn-sm" onclick="exportExcelCSV()">📊 Export Excel (CSV)</button>
+          <button class="btn btn-primary btn-sm" onclick="printActiveQuotation()">🖨️ Print / Save PDF</button>
+          <button class="btn btn-success btn-sm" onclick="shareViaWhatsApp()">💬 Share on WhatsApp</button>
+        </div>
+
+        <!-- Existing multi-item invoice editor -->
+        <div id="quoteEditorView" class="quote-editor-container">
+          
+          <div class="panel">
+            <div class="panel-head">
+              <h3><span>📄</span> Multi-Item Reference & Dates</h3>
+            </div>
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label>Quotation No.</label>
+                <input type="text" id="quoteNo" class="form-control" placeholder="TEI/QT/2026/001">
+              </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="quoteDate" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Valid Until</label>
+                <input type="date" id="validUntil" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Payment Terms</label>
+                <input type="text" id="paymentTerms" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Delivery Timeline</label>
+                <input type="text" id="deliveryTimeline" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Taxation Type</label>
+                <div style="display: flex; gap: 15px; margin-top: 8px;">
+                  <label style="font-weight: normal; cursor: pointer;">
+                    <input type="radio" name="taxType" value="intra" checked> Intra-State (CGST 9% + SGST 9%)
+                  </label>
+                  <label style="font-weight: normal; cursor: pointer;">
+                    <input type="radio" name="taxType" value="inter"> Inter-State (IGST 18%)
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3><span>🏢</span> Customer Information</h3>
+            </div>
+            <div class="form-grid-3">
+              <div class="form-group col-span-2">
+                <label>Customer Name *</label>
+                <input type="text" id="custName" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Customer GSTIN</label>
+                <input type="text" id="custGstin" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Contact Person</label>
+                <input type="text" id="custContact" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="text" id="custPhone" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="custEmail" class="form-control">
+              </div>
+              <div class="form-group col-span-2">
+                <label>Billing Address</label>
+                <textarea id="custBillAddress" class="form-control" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Shipping Destination</label>
+                <textarea id="custShipAddress" class="form-control" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3><span>📦</span> Line Items & Catalog Presets</h3>
+              <div class="preset-dropdown-wrap">
+                <select id="presetProductSelect" class="form-control" style="width: auto; max-width: 320px;">
+                  <option value="">-- Add standard item --</option>
+                </select>
+                <button class="btn btn-outline btn-sm" onclick="addPresetItem()">+ Add Product</button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th class="col-num">#</th>
+                    <th class="col-desc">Item Description & Specification</th>
+                    <th class="col-hsn">HSN/SAC</th>
+                    <th class="col-qty">Qty</th>
+                    <th class="col-unit">Unit</th>
+                    <th class="col-rate">Unit Rate (₹)</th>
+                    <th class="col-disc">Disc %</th>
+                    <th class="col-tax">GST %</th>
+                    <th class="col-amount" style="text-align: right;">Total (₹)</th>
+                    <th class="col-action"></th>
+                  </tr>
+                </thead>
+                <tbody id="itemsTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="table-action-footer">
+              <button class="btn btn-outline btn-sm" onclick="addNewItem()">➕ Add Custom Line Item</button>
+              <button class="btn btn-danger btn-sm" onclick="clearAllItems()">🗑️ Clear All</button>
+            </div>
+          </div>
+
+          <div class="bottom-calc-grid">
+            <div class="terms-card">
+              <h3 style="font-size: 15px; color: var(--ink); margin-bottom: 12px;">Terms & Conditions & Bank Details</h3>
+              <div class="form-group" style="margin-bottom: 15px;">
+                <label>Terms of Supply</label>
+                <textarea id="quoteTerms" class="form-control" rows="6"></textarea>
+              </div>
+              <div style="background: var(--paper); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--line); font-size: 12px;">
+                <strong style="color: var(--ink); display: block; margin-bottom: 4px;">Bank Account for RTGS / NEFT:</strong>
+                <div>Bank: <strong>HDFC Bank Ltd</strong> • Branch: <strong>Hosur Sipcot</strong></div>
+                <div>A/C Name: <strong>TEI PACKAGE</strong> • A/C No: <strong>50200088991122</strong></div>
+                <div>IFSC Code: <strong>HDFC0001234</strong></div>
+              </div>
+            </div>
+
+            <div class="summary-card">
+              <h3 style="font-size: 15px; color: var(--ink); margin-bottom: 12px;">Financial Summary</h3>
+              <div class="summary-line">
+                <span>Subtotal (<span id="sumItemCount">0 items</span>)</span>
+                <strong id="sumSubtotal">₹0.00</strong>
+              </div>
+              <div class="summary-line">
+                <span>Freight / Transit Charges (₹)</span>
+                <input type="number" id="freightCharges" class="form-control" style="width: 120px; text-align: right; padding: 4px 8px;" value="0" min="0">
+              </div>
+              <div class="summary-line">
+                <span>Overall Discount (₹)</span>
+                <input type="number" id="overallDiscount" class="form-control" style="width: 120px; text-align: right; padding: 4px 8px;" value="0" min="0">
+              </div>
+              <div class="summary-line" id="cgstRow">
+                <span>CGST (9%)</span>
+                <strong id="sumCgst">₹0.00</strong>
+              </div>
+              <div class="summary-line" id="sgstRow">
+                <span>SGST (9%)</span>
+                <strong id="sumSgst">₹0.00</strong>
+              </div>
+              <div class="summary-line" id="igstRow" style="display: none;">
+                <span>IGST (18%)</span>
+                <strong id="sumIgst">₹0.00</strong>
+              </div>
+              <div class="summary-line">
+                <span>Round Off</span>
+                <strong id="sumRoundOff">₹0.00</strong>
+              </div>
+              <div class="summary-line grand-total">
+                <span>Grand Total</span>
+                <strong id="sumGrandTotal">₹0.00</strong>
+              </div>
+              <div class="amount-words-box">
+                <small>Amount in Words</small>
+                <p id="sumAmountWords">Indian Rupees Zero Only</p>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px;">
+                <button class="btn btn-primary" onclick="triggerPrint()">🖨️ Print Quotation</button>
+                <button class="btn btn-secondary" style="color: var(--ink); background: #e6ede9;" onclick="switchToolTab('print')">👁️ View Official Bill</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           TOOL 3: OFFICIAL PRINTABLE BILL / QUOTATION SHEET (A4 Ready)
+           ==================================================================== -->
+      <div id="viewPrintableSheet" style="display: none;">
+        <div class="bill-preview-wrapper">
+          <div class="invoice-sheet" id="printableInvoiceSheet">
+            
+            <!-- Header -->
+            <div class="inv-header">
+              <div class="inv-brand">
+                <div class="inv-brand-box">TEI</div>
+                <div class="inv-company-title">
+                  <h1>TEI PACKAGE</h1>
+                  <p>Industrial Packaging & Material Handling Solutions</p>
+                  <div class="inv-company-details">
+                    Plot No. 42, Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu - 635126<br>
+                    <strong>GSTIN:</strong> 33AABCT9988A1Z2 | <strong>State Code:</strong> 33 (Tamil Nadu)<br>
+                    <strong>Email:</strong> sales@teipackage.com | <strong>Web:</strong> www.teipackage.com | <strong>Phone:</strong> +91 98427 12345
+                  </div>
+                </div>
+              </div>
+
+              <div class="inv-title-box">
+                <span class="inv-badge-title">QUOTATION / BILL</span>
+                <div class="inv-meta-grid">
+                  <div>Quote Ref: <strong id="prQuoteNo">TEI-DEMO-002</strong></div>
+                  <div>Date: <strong id="prDate">2026-11-02</strong></div>
+                  <div><span id="prReference"></span></div>
+                  <div>Validity: <strong>30 Days</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer & Consignee -->
+            <div class="inv-parties-grid">
+              <div class="party-box">
+                <h4>Billed To (Customer):</h4>
+                <div class="party-name" id="prCustomer">Customer Name</div>
+                <div id="prContact" style="font-weight: 600; color: #28443d; font-size: 12px; margin-top: 2px;"></div>
+                <p id="prAddress" style="margin-top: 4px;">Customer Address</p>
+                <div id="prPartName" style="font-weight: 700; color: var(--ink); margin-top: 6px;"></div>
+                <div id="prPartNo" style="font-size: 11px; color: var(--muted);"></div>
+              </div>
+
+              <div class="party-box">
+                <h4>Fabrication Specifications:</h4>
+                <div id="prSpecsSummary" style="font-size: 12px; color: #234239; line-height: 1.6; font-weight: 600;"></div>
+                <div style="margin-top: 8px; font-size: 11.5px; color: var(--muted);">
+                  Despatch: Ex-Works Hosur, Tamil Nadu / Road Transport
+                </div>
+              </div>
+            </div>
+
+            <!-- Printable Item Details -->
+            <table class="inv-items-table">
+              <thead>
+                <tr>
+                  <th style="width: 35px;" class="text-center">#</th>
+                  <th>Product Description & Fabricated Specification</th>
+                  <th style="width: 80px;" class="text-center">Qty</th>
+                  <th style="width: 100px;" class="text-right">Unit Rate (₹)</th>
+                  <th style="width: 110px;" class="text-right">Amount (₹)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center">1</td>
+                  <td>
+                    <strong id="prDescription">Tuff plastic crate, Green colour, with netted tape, with dust cover.</strong>
+                    <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">
+                      Material Component: <span id="prMaterialTotal">₹0.00</span> | Labour & Fabrication: <span id="prLabourTotal">₹0.00</span>
+                    </div>
+                  </td>
+                  <td class="text-center" id="prQty">1 Nos</td>
+                  <td class="text-right" id="prUnitRate">₹0.00</td>
+                  <td class="text-right" id="prSubtotal">₹0.00</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Summary & Bank Section -->
+            <div class="inv-summary-container">
+              <div>
+                <div class="inv-bank-box">
+                  <h5>Bank Details for RTGS / NEFT:</h5>
+                  <div>Bank Name: <strong>HDFC Bank Ltd</strong></div>
+                  <div>A/C Name: <strong>TEI PACKAGE</strong></div>
+                  <div>A/C No: <strong>50200088991122</strong> (Current A/C)</div>
+                  <div>IFSC: <strong>HDFC0001234</strong> • Branch: <strong>Hosur Sipcot</strong></div>
+                </div>
+
+                <div class="amount-words-box" style="margin-top: 14px;">
+                  <small>Notes & Tolerances:</small>
+                  <p id="prNotes" style="font-size: 11.5px; color: #3b524a; margin: 2px 0 0;">Standard manufacturing tolerances apply.</p>
+                </div>
+              </div>
+
+              <div>
+                <table class="inv-calc-table">
+                  <tbody>
+                    <tr>
+                      <td>Subtotal:</td>
+                      <td id="prSubtotalVal">₹0.00</td>
+                    </tr>
+                    <tr>
+                      <td>GST Tax:</td>
+                      <td id="prGst">₹0.00</td>
+                    </tr>
+                    <tr class="total-row">
+                      <td>Grand Total:</td>
+                      <td id="prGrandTotal">₹0.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Signatures -->
+            <div class="inv-terms-signatures">
+              <div class="inv-terms">
+                <h5>Terms & Conditions:</h5>
+                <div>1. Prices quoted are Ex-Works Hosur, Tamil Nadu.</div>
+                <div>2. Freight & transit insurance extra at actuals unless agreed.</div>
+                <div>3. Quotation valid for 30 days from date of issue.</div>
+                <div>4. 100% replacement warranty against manufacturing defects.</div>
+              </div>
+
+              <div class="inv-signature-box">
+                <div class="signature-space">
+                  <span style="font-family: cursive; font-size: 18px; color: #173b35; opacity: 0.8;">TEI Package</span>
+                </div>
+                <p>For TEI PACKAGE<br><span style="font-weight: normal; font-size: 10px; color: var(--muted);">Authorized Signatory</span></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= OFFICIAL MULTI-ITEM BILL PREVIEW VIEW (A4 Printable) ================= -->
+      <div id="quotePreviewView" class="bill-preview-wrapper" style="display: none;">
+        <div class="invoice-sheet" id="printableStandardSheet">
+          
+          <!-- Invoice Header -->
+          <div class="inv-header">
+            <div class="inv-brand">
+              <div class="inv-brand-box">TEI</div>
+              <div class="inv-company-title">
+                <h1>TEI PACKAGE</h1>
+                <p>Industrial Packaging & Material Handling Solutions</p>
+                <div class="inv-company-details">
+                  Plot No. 42, Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu - 635126<br>
+                  <strong>GSTIN:</strong> 33AABCT9988A1Z2 | <strong>State Code:</strong> 33 (Tamil Nadu)<br>
+                  <strong>Email:</strong> sales@teipackage.com | <strong>Web:</strong> www.teipackage.com | <strong>Phone:</strong> +91 98427 12345
+                </div>
+              </div>
+            </div>
+
+            <div class="inv-title-box">
+              <span class="inv-badge-title">TAX INVOICE / BILL</span>
+              <div class="inv-meta-grid">
+                <div>Quote Ref: <strong id="invQuoteNo">TEI/QT/2026/001</strong></div>
+                <div>Date: <strong id="invDate">03/11/2026</strong></div>
+                <div>Valid Until: <strong id="invValidUntil">03/12/2026</strong></div>
+                <div>Payment: <span id="invPaymentTerms">30 Days Credit</span></div>
+                <div>Delivery: <span id="invDeliveryTerms">3 to 5 Days</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parties / Addresses -->
+          <div class="inv-parties-grid">
+            <div class="party-box">
+              <h4>Billed To (Customer):</h4>
+              <div class="party-name" id="invCustName">Customer Company Name</div>
+              <div id="invCustContact" style="font-weight: 600; color: #28443d; font-size: 12px; margin-top: 2px;"></div>
+              <div id="invCustGstin" style="font-weight: 700; color: #173b35; font-size: 12px; margin: 2px 0;"></div>
+              <p id="invCustBilling">Billing address text...</p>
+              <div id="invCustPhone" style="font-size: 11.5px; color: var(--muted); margin-top: 4px;"></div>
+              <div id="invCustEmail" style="font-size: 11.5px; color: var(--muted);"></div>
+            </div>
+
+            <div class="party-box">
+              <h4>Shipped / Delivered To:</h4>
+              <div class="party-name" id="invCustShippingName">Same as Consignee</div>
+              <p id="invCustShipping" style="margin-top: 6px;">Consignee delivery destination...</p>
+              <div style="font-size: 11px; color: var(--muted); margin-top: 8px;">
+                Despatch Mode: Road Transport / Door Delivery
+              </div>
+            </div>
+          </div>
+
+          <!-- Invoice Line Items Table -->
+          <table class="inv-items-table">
+            <thead>
+              <tr>
+                <th style="width: 35px;" class="text-center">#</th>
+                <th>Item Description & Specification</th>
+                <th style="width: 75px;" class="text-center">HSN</th>
+                <th style="width: 70px;" class="text-center">Qty</th>
+                <th style="width: 85px;" class="text-right">Rate (₹)</th>
+                <th style="width: 55px;" class="text-center">Disc</th>
+                <th style="width: 90px;" class="text-right">Taxable</th>
+                <th style="width: 55px;" class="text-center">GST</th>
+                <th style="width: 100px;" class="text-right">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="invItemsTbody">
+              <!-- Rendered via quotation.js -->
+            </tbody>
+          </table>
+
+          <!-- Financial Breakdown & Bank Section -->
+          <div class="inv-summary-container">
+            <div>
+              <div class="inv-bank-box">
+                <h5>Bank Account Details for Wire Transfer:</h5>
+                <div>Bank Name: <strong>HDFC Bank Ltd</strong></div>
+                <div>Account Name: <strong>TEI PACKAGE</strong></div>
+                <div>Account Number: <strong>50200088991122</strong> (Current A/C)</div>
+                <div>IFSC Code: <strong>HDFC0001234</strong> • Branch: <strong>Hosur Sipcot</strong></div>
+              </div>
+
+              <div class="amount-words-box" style="margin-top: 14px;">
+                <small>Amount in Words:</small>
+                <p id="invAmountInWords" style="font-size: 12px; font-weight: 700; color: #173b35;">Indian Rupees Zero Only</p>
+              </div>
+            </div>
+
+            <div>
+              <table class="inv-calc-table">
+                <tbody>
+                  <tr>
+                    <td>Subtotal:</td>
+                    <td id="invSubtotal">₹0.00</td>
+                  </tr>
+                  <tbody id="invTaxBreakdownRows">
+                    <!-- Tax breakdown rows -->
+                  </tbody>
+                  <tr id="invFreightRow" style="display: none;">
+                    <td>Freight / Transit:</td>
+                    <td id="invFreight">₹0.00</td>
+                  </tr>
+                  <tr id="invDiscountRow" style="display: none;">
+                    <td>Discount:</td>
+                    <td id="invDiscount">₹0.00</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td>Grand Total:</td>
+                    <td id="invGrandTotal">₹0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Terms and Signatures -->
+          <div class="inv-terms-signatures">
+            <div class="inv-terms">
+              <h5>Terms & Conditions:</h5>
+              <div id="invTermsText">
+                <div>1. Prices quoted are Ex-Works Hosur, Tamil Nadu.</div>
+                <div>2. GST 18% as applicable.</div>
+                <div>3. Freight & transit insurance at buyer's scope unless specified.</div>
+                <div>4. Quotation valid for 30 days from date of issuance.</div>
+                <div>5. Standard warranty against manufacturing defects for 12 months.</div>
+              </div>
+            </div>
+
+            <div class="inv-signature-box">
+              <div class="signature-space">
+                <span style="font-family: cursive; font-size: 18px; color: #173b35; opacity: 0.8;">TEI Package</span>
+              </div>
+              <p>For TEI PACKAGE<br><span style="font-weight: normal; font-size: 10px; color: var(--muted);">Authorized Signatory</span></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JavaScript Engines -->
+  <script src="js/crate-estimator.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/quotation.js"></script>
+  <script>
+    let activeTool = 'estimator';
+
+    // Tool Tab Switcher
+    function switchToolTab(tab) {
+      const vEst = document.getElementById("viewCrateEstimator");
+      const vStd = document.getElementById("viewStandardInvoice");
+      const vPrnEst = document.getElementById("viewPrintableSheet");
+      const vPrnStd = document.getElementById("quotePreviewView");
+      const bEst = document.getElementById("btnToolEstimator");
+      const bStd = document.getElementById("btnToolStandard");
+      const bPrn = document.getElementById("btnToolPrint");
+
+      if (tab === 'estimator' || tab === 'standard') {
+        activeTool = tab;
+      }
+
+      if (tab === 'print') {
+        vEst.style.display = 'none';
+        vStd.style.display = 'none';
+        if (activeTool === 'standard') {
+          if (vPrnEst) vPrnEst.style.display = 'none';
+          if (vPrnStd) vPrnStd.style.display = 'block';
+          if (typeof recalculateAll === 'function') recalculateAll();
+        } else {
+          if (vPrnEst) vPrnEst.style.display = 'block';
+          if (vPrnStd) vPrnStd.style.display = 'none';
+          if (typeof calculateCrateTotals === 'function') calculateCrateTotals();
+        }
+      } else {
+        vEst.style.display = tab === 'estimator' ? 'block' : 'none';
+        vStd.style.display = tab === 'standard' ? 'block' : 'none';
+        if (vPrnEst) vPrnEst.style.display = 'none';
+        if (vPrnStd) vPrnStd.style.display = 'none';
+      }
+
+      bEst.classList.toggle("active", tab === 'estimator');
+      bStd.classList.toggle("active", tab === 'standard');
+      bPrn.classList.toggle("active", tab === 'print');
+
+      if (tab === 'print') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Universal Print Function for quotation.html
+    window.printActiveQuotation = function() {
+      switchToolTab('print');
+      setTimeout(() => {
+        window.print();
+      }, 250);
+    };
+  </script>
+
+</body>
+</html>

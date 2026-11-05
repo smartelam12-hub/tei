@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEI PACKAGE | Industrial Packaging Solutions & Quotation Bill Generator</title>
+  <meta name="description" content="TEI PACKAGE - Leading Manufacturer of Plastic Crates, Industrial Storage Bins, Foldable Large Containers (FLC), Pallets, ESD & Returnable Packaging in Hosur, Tamil Nadu. Instant online quotation & bill generator.">
+  <meta name="keywords" content="TEI Package, teipackage.com, plastic crates hosur, industrial bins, FLC containers, returnable packaging, quotation bill generator">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon placeholder with SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23173b35'/><text x='50%' y='62%' font-size='42' font-weight='900' fill='%23c58b48' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    <div>
+      📍 <strong>TEI PACKAGE</strong> • Sipcot Industrial Complex, Hosur, Tamil Nadu | GSTIN: 33AABCT9988A1Z2
+    </div>
+    <div class="announcement-links">
+      <a href="tel:+919842712345">📞 +91 98427 12345</a>
+      <a href="mailto:sales@teipackage.com">✉️ sales@teipackage.com</a>
+      <a href="https://wa.me/919842712345" target="_blank">💬 WhatsApp Us</a>
+    </div>
+  </div>
+
+  <!-- Multi-User Server & Database Connection Banner -->
+  <div class="server-status-strip">
+    <div class="status-pill-group">
+      <span class="live-status-pill">
+        <span class="live-pulse-dot" id="serverStatusDot"></span>
+        <span id="serverStatusText">SQLite Database Connected • Multi-User Mode Active</span>
+      </span>
+      <span class="network-access-pill" id="serverNetworkAddress">Loading server network address...</span>
+    </div>
+    <div style="font-size: 12.5px; color: #cbd5e1;">
+      📍 Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu | GSTIN: 33AABCT9988A1Z2
+    </div>
+  </div>
+
+  <!-- Main Navbar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#home" class="brand">
+        <div class="brand-mark">TEI</div>
+        <div class="brand-info">
+          <h1>TEI PACKAGE</h1>
+          <p>Industrial Packaging Solutions</p>
+        </div>
+      </a>
+
+      <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle navigation menu">☰</button>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#quotation-tool">Quotation Tool</a></li>
+        <li><a href="#database-hub" style="color: #fde68a; font-weight: 600;">📊 Live Database</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#quotation-tool" class="btn btn-primary btn-sm">Create Quotation Bill</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="badge">Industrial Grade • 100% Recyclable • Hosur, Tamil Nadu</div>
+        <h1>Heavy-Duty Returnable Packaging & <span>Plastic Crates</span></h1>
+        <p>Manufacturer of engineered plastic crates, modular storage bins, foldable large containers (FLC), ESD trays, and custom returnable packaging for automotive and electronics manufacturing.</p>
+        <div class="hero-actions">
+          <a href="quotation.html" class="btn btn-primary btn-lg">Launch Quotation Bill Tool ⚡</a>
+          <a href="#products" class="btn btn-secondary btn-lg">Browse Product Range</a>
+          <a href="https://wa.me/919842712345?text=Hello%20TEI%20PACKAGE,%20I%20need%20a%20quotation%20for%20crates%20and%20bins." target="_blank" class="btn btn-secondary btn-lg">WhatsApp Inquiry</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h3>500+</h3>
+            <p>Industrial Clients</p>
+          </div>
+          <div class="stat-item">
+            <h3>100%</h3>
+            <p>HDPE / Virgin Grade</p>
+          </div>
+          <div class="stat-item">
+            <h3>Hosur Hub</h3>
+            <p>Direct OEM Supply</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Custom Crate & Bill Estimator</h3>
+        <p>Calculate labour, material costs (HDPE/XLPE, rivets, netted tape, dust covers), and print formal A4 quotation bills for purchase orders in 60 seconds.</p>
+        <div class="hero-quick-list">
+          <div class="quick-item">
+            <i>✔</i> <span>Multi-Size Estimator (TEI-DEMO-001, TEI-DEMO-002...)</span>
+          </div>
+          <div class="quick-item">
+            <i>✔</i> <span>Work Matrix (Cutting, Drilling, Welding, Painting)</span>
+          </div>
+          <div class="quick-item">
+            <i>✔</i> <span>Direct Print / PDF, Exact TEI CSV Export & WhatsApp</span>
+          </div>
+        </div>
+        <a href="quotation.html" class="btn btn-primary full">Open Full Quotation Tool →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog Section -->
+  <section class="products-section" id="products">
+    <div class="container">
+      <div class="section-title-wrap">
+        <span class="section-subtitle">Catalog & Specifications</span>
+        <h2 class="section-title">Our Industrial Product Range</h2>
+        <p class="section-desc">Engineered for durability, optimal stacking, and rigorous supply chain handling.</p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="category-pills">
+        <button class="category-pill active" data-category="all">All Products</button>
+        <button class="category-pill" data-category="crates">Plastic Crates</button>
+        <button class="category-pill" data-category="bins">Part Storage Bins</button>
+        <button class="category-pill" data-category="flc">FLC Containers</button>
+        <button class="category-pill" data-category="pallets">Plastic Pallets</button>
+        <button class="category-pill" data-category="esd">ESD & Custom</button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="products-grid">
+
+        <!-- Product 1 -->
+        <div class="product-card" data-category="crates">
+          <span class="product-badge">Top Seller</span>
+          <h3>TEI Standard Crate (600x400x325 mm)</h3>
+          <p>Heavy duty stackable crate for automotive components, logistics, and warehousing.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>600 x 400 x 325 mm</strong></li>
+            <li><span>Material:</span> <strong>HDPE Virgin Polymer</strong></li>
+            <li><span>Load Capacity:</span> <strong>35 kg UDL</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹650.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(0)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-category="crates">
+          <span class="product-badge">Stackable</span>
+          <h3>TEI Medium Crate (540x360x280 mm)</h3>
+          <p>Solid base and ribbed side walls for maximum rigidity and high vertical load stacking.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>540 x 360 x 280 mm</strong></li>
+            <li><span>Material:</span> <strong>Polypropylene / HDPE</strong></li>
+            <li><span>Load Capacity:</span> <strong>25 kg UDL</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹520.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(1)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-category="crates">
+          <span class="product-badge">Nestable</span>
+          <h3>TEI Compact Component Crate (400x300x220 mm)</h3>
+          <p>Compact form factor suitable for assembly lines, small hardware, and intra-plant transit.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>400 x 300 x 220 mm</strong></li>
+            <li><span>Material:</span> <strong>HDPE High Impact</strong></li>
+            <li><span>Load Capacity:</span> <strong>18 kg UDL</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹380.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(2)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card" data-category="bins">
+          <span class="product-badge">Organizer</span>
+          <h3>TEI Industrial Part Bin #25 (250x150x120 mm)</h3>
+          <p>Front-hopper opening bin designed for shelf storage and fast assembly retrieval.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>250 x 150 x 120 mm</strong></li>
+            <li><span>Features:</span> <strong>Front Label Holder</strong></li>
+            <li><span>Color Options:</span> <strong>Blue / Red / Green</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹140.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(3)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 5 -->
+        <div class="product-card" data-category="bins">
+          <span class="product-badge">Heavy Duty</span>
+          <h3>TEI Industrial Part Bin #35 (350x210x150 mm)</h3>
+          <p>High-capacity storage bin for heavier mechanical hardware and spare parts storage.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>350 x 210 x 150 mm</strong></li>
+            <li><span>Features:</span> <strong>Interlocking Stack Pins</strong></li>
+            <li><span>Load Capacity:</span> <strong>12 kg</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹220.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(4)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 6 -->
+        <div class="product-card" data-category="flc">
+          <span class="product-badge">Bulk Transit</span>
+          <h3>TEI FLC Foldable Large Container (1200x1000x975 mm)</h3>
+          <p>Collapsible heavy container that folds flat on return trips, cutting reverse logistics costs by 65%.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>1200 x 1000 x 975 mm</strong></li>
+            <li><span>Folded Height:</span> <strong>360 mm</strong></li>
+            <li><span>Payload:</span> <strong>1,000 kg</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹12,500.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(5)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 7 -->
+        <div class="product-card" data-category="pallets">
+          <span class="product-badge">Reinforced</span>
+          <h3>TEI Heavy Duty Plastic Pallet (1200x1000 mm)</h3>
+          <p>Non-slip perforated deck, 4-way entry for forklifts and hand pallet trucks with steel reinforcement.</p>
+          <ul class="product-spec-list">
+            <li><span>Dimensions:</span> <strong>1200 x 1000 x 160 mm</strong></li>
+            <li><span>Static Load:</span> <strong>4,000 kg</strong></li>
+            <li><span>Dynamic Load:</span> <strong>1,200 kg</strong></li>
+            <li><span>HSN Code:</span> <strong>39239090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹2,450.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(6)">+ Add to Quote</button>
+          </div>
+        </div>
+
+        <!-- Product 8 -->
+        <div class="product-card" data-category="esd">
+          <span class="product-badge">Conductive</span>
+          <h3>TEI ESD Safe Anti-Static Bin / Tray</h3>
+          <p>Specially formulated conductive polymer for PCB and electronic hardware protection.</p>
+          <ul class="product-spec-list">
+            <li><span>Surface Resistivity:</span> <strong>10^4 - 10^6 Ohms</strong></li>
+            <li><span>Protection:</span> <strong>Static Dissipative</strong></li>
+            <li><span>Application:</span> <strong>PCB / Sensor Handling</strong></li>
+            <li><span>HSN Code:</span> <strong>39231090</strong></li>
+          </ul>
+          <div class="product-price-row">
+            <div class="product-price">
+              <small>Unit Rate</small>
+              <strong>₹460.00</strong>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="addCatalogItemToQuote(7)">+ Add to Quote</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       QUOTATION & BILL GENERATOR SECTION
+       ======================================================================== -->
+  <section class="quote-app-section" id="quotation-tool">
+    <div class="container">
+
+      <!-- Application Controls Header -->
+      <div class="app-header-controls">
+        <div class="quote-title-group">
+          <h2>TEI PACKAGE • Quotation & Billing Engine</h2>
+          <p>Generate professional industrial quotations, tax proforma invoices, and official bills with instant GST calculations.</p>
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeBtnEdit" onclick="switchViewMode('edit')">✏️ Edit Quotation Form</button>
+          <button class="mode-btn" id="modeBtnPreview" onclick="switchViewMode('preview')">📄 Official Bill Preview</button>
+        </div>
+      </div>
+
+      <!-- Quick Action Toolbar -->
+      <div class="action-bar">
+        <button class="btn btn-outline btn-sm" onclick="startNewQuotation()">➕ New Quotation</button>
+        <button class="btn btn-primary btn-sm" style="background:#15803d; border-color:#15803d;" onclick="saveQuotationDraft()">💾 Save to Database</button>
+        <a href="#database-hub" class="btn btn-outline btn-sm">📊 View DB Records</a>
+        <button class="btn btn-outline btn-sm" onclick="openHistoryModal()">📂 Local Drafts <span id="historyCountBadge"></span></button>
+        <button class="btn btn-outline btn-sm" onclick="exportExcelCSV()">📊 Export Excel (CSV)</button>
+        <button class="btn btn-primary btn-sm" onclick="triggerPrint()">🖨️ Print / Save PDF</button>
+        <button class="btn btn-success btn-sm" onclick="shareViaWhatsApp()">💬 Share on WhatsApp</button>
+      </div>
+
+      <!-- ================= EDIT FORM VIEW ================= -->
+      <div id="quoteEditorView" class="quote-editor-container">
+
+        <!-- Panel 1: Document Details -->
+        <div class="panel">
+          <div class="panel-head">
+            <h3><span>📄</span> Quotation Reference & Dates</h3>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label>Quotation / Bill No.</label>
+              <input type="text" id="quoteNo" class="form-control" placeholder="TEI/QT/2026/001">
+            </div>
+            <div class="form-group">
+              <label>Quotation Date</label>
+              <input type="date" id="quoteDate" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Valid Until</label>
+              <input type="date" id="validUntil" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Payment Terms</label>
+              <input type="text" id="paymentTerms" class="form-control" placeholder="e.g. 100% Against PI / 30 Days Credit">
+            </div>
+            <div class="form-group">
+              <label>Delivery Timeline</label>
+              <input type="text" id="deliveryTimeline" class="form-control" placeholder="e.g. 3 to 5 Days from PO">
+            </div>
+            <div class="form-group">
+              <label>Taxation Type</label>
+              <div style="display: flex; gap: 15px; margin-top: 8px;">
+                <label style="font-weight: normal; cursor: pointer;">
+                  <input type="radio" name="taxType" value="intra" checked> Intra-State (CGST 9% + SGST 9%)
+                </label>
+                <label style="font-weight: normal; cursor: pointer;">
+                  <input type="radio" name="taxType" value="inter"> Inter-State (IGST 18%)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 2: Customer / Billed To Information -->
+        <div class="panel">
+          <div class="panel-head">
+            <h3><span>🏢</span> Customer & Consignee Details</h3>
+            <small style="color: var(--muted);">Enter customer GSTIN to auto-detect intra/inter state tax</small>
+          </div>
+          <div class="form-grid-3">
+            <div class="form-group col-span-2">
+              <label>Customer / Company Name *</label>
+              <input type="text" id="custName" class="form-control" placeholder="e.g. TVS Motor Company Ltd / Ashok Leyland Ltd">
+            </div>
+            <div class="form-group">
+              <label>Customer GSTIN <small>(Starts with 33 for Tamil Nadu)</small></label>
+              <input type="text" id="custGstin" class="form-control" placeholder="e.g. 33AAACT1234A1Z1">
+            </div>
+            <div class="form-group">
+              <label>Contact Person</label>
+              <input type="text" id="custContact" class="form-control" placeholder="e.g. Mr. Rajesh Sharma">
+            </div>
+            <div class="form-group">
+              <label>Phone / Mobile</label>
+              <input type="text" id="custPhone" class="form-control" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="custEmail" class="form-control" placeholder="purchase@company.com">
+            </div>
+            <div class="form-group col-span-2">
+              <label>Billing Address</label>
+              <textarea id="custBillAddress" class="form-control" rows="2" placeholder="Full plant or registered office address"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Shipping / Delivery Address</label>
+              <textarea id="custShipAddress" class="form-control" rows="2" placeholder="Delivery gate or warehouse address (if different)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel 3: Line Items Table -->
+        <div class="panel">
+          <div class="panel-head">
+            <h3><span>📦</span> Line Items & Pricing</h3>
+            <div class="preset-dropdown-wrap">
+              <select id="presetProductSelect" class="form-control" style="width: auto; max-width: 320px;">
+                <option value="">-- Add standard item --</option>
+              </select>
+              <button class="btn btn-outline btn-sm" onclick="addPresetItem()">+ Add Product</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th class="col-num">#</th>
+                  <th class="col-desc">Item Description & Specification</th>
+                  <th class="col-hsn">HSN/SAC</th>
+                  <th class="col-qty">Qty</th>
+                  <th class="col-unit">Unit</th>
+                  <th class="col-rate">Unit Rate (₹)</th>
+                  <th class="col-disc">Disc %</th>
+                  <th class="col-tax">GST %</th>
+                  <th class="col-amount" style="text-align: right;">Total (₹)</th>
+                  <th class="col-action"></th>
+                </tr>
+              </thead>
+              <tbody id="itemsTableBody">
+                <!-- Dynamically populated via quotation.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-action-footer">
+            <button class="btn btn-outline btn-sm" onclick="addNewItem()">➕ Add Custom Line Item</button>
+            <button class="btn btn-danger btn-sm" onclick="clearAllItems()">🗑️ Clear All</button>
+          </div>
+        </div>
+
+        <!-- Panel 4: Calculation & Summary Grid -->
+        <div class="bottom-calc-grid">
+          
+          <!-- Terms & Bank Details -->
+          <div class="terms-card">
+            <h3 style="font-size: 15px; color: var(--ink); margin-bottom: 12px;">Terms & Conditions & Bank Details</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label>Terms of Supply</label>
+              <textarea id="quoteTerms" class="form-control" rows="6"></textarea>
+            </div>
+            <div style="background: var(--paper); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--line); font-size: 12px;">
+              <strong style="color: var(--ink); display: block; margin-bottom: 4px;">Bank Account for RTGS / NEFT:</strong>
+              <div>Bank: <strong>HDFC Bank Ltd</strong> • Branch: <strong>Hosur Sipcot</strong></div>
+              <div>A/C Name: <strong>TEI PACKAGE</strong> • A/C No: <strong>50200088991122</strong></div>
+              <div>IFSC Code: <strong>HDFC0001234</strong></div>
+            </div>
+          </div>
+
+          <!-- Totals Summary -->
+          <div class="summary-card">
+            <h3 style="font-size: 15px; color: var(--ink); margin-bottom: 12px;">Financial Summary</h3>
+            
+            <div class="summary-line">
+              <span>Subtotal (<span id="sumItemCount">0 items</span>)</span>
+              <strong id="sumSubtotal">₹0.00</strong>
+            </div>
+
+            <div class="summary-line">
+              <span>Freight / Transit Charges (₹)</span>
+              <input type="number" id="freightCharges" class="form-control" style="width: 120px; text-align: right; padding: 4px 8px;" value="0" min="0">
+            </div>
+
+            <div class="summary-line">
+              <span>Overall Discount (₹)</span>
+              <input type="number" id="overallDiscount" class="form-control" style="width: 120px; text-align: right; padding: 4px 8px;" value="0" min="0">
+            </div>
+
+            <!-- Tax rows -->
+            <div class="summary-line" id="cgstRow">
+              <span>CGST (9%)</span>
+              <strong id="sumCgst">₹0.00</strong>
+            </div>
+            <div class="summary-line" id="sgstRow">
+              <span>SGST (9%)</span>
+              <strong id="sumSgst">₹0.00</strong>
+            </div>
+            <div class="summary-line" id="igstRow" style="display: none;">
+              <span>IGST (18%)</span>
+              <strong id="sumIgst">₹0.00</strong>
+            </div>
+
+            <div class="summary-line">
+              <span>Round Off</span>
+              <strong id="sumRoundOff">₹0.00</strong>
+            </div>
+
+            <div class="summary-line grand-total">
+              <span>Grand Total</span>
+              <strong id="sumGrandTotal">₹0.00</strong>
+            </div>
+
+            <div class="amount-words-box">
+              <small>Amount in Words</small>
+              <p id="sumAmountWords">Indian Rupees Zero Only</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px;">
+              <button class="btn btn-primary" onclick="triggerPrint()">🖨️ Print Quotation</button>
+              <button class="btn btn-secondary" style="color: var(--ink); background: #e6ede9;" onclick="switchViewMode('preview')">👁️ View Official Bill</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= OFFICIAL BILL PREVIEW VIEW (A4 Printable) ================= -->
+      <div id="quotePreviewView" class="bill-preview-wrapper" style="display: none;">
+        
+        <div class="invoice-sheet" id="printableInvoiceSheet">
+          
+          <!-- Invoice Header -->
+          <div class="inv-header">
+            <div class="inv-brand">
+              <div class="inv-brand-box">TEI</div>
+              <div class="inv-company-title">
+                <h1>TEI PACKAGE</h1>
+                <p>Industrial Packaging & Material Handling Solutions</p>
+                <div class="inv-company-details">
+                  Plot No. 42, Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu - 635126<br>
+                  <strong>GSTIN:</strong> 33AABCT9988A1Z2 | <strong>State Code:</strong> 33 (Tamil Nadu)<br>
+                  <strong>Email:</strong> sales@teipackage.com | <strong>Web:</strong> www.teipackage.com | <strong>Phone:</strong> +91 98427 12345
+                </div>
+              </div>
+            </div>
+
+            <div class="inv-title-box">
+              <span class="inv-badge-title">QUOTATION / BILL</span>
+              <div class="inv-meta-grid">
+                <div>Quote Ref: <strong id="invQuoteNo">TEI/QT/2026/001</strong></div>
+                <div>Date: <strong id="invDate">03/11/2026</strong></div>
+                <div>Valid Until: <strong id="invValidUntil">03/12/2026</strong></div>
+                <div>Payment: <span id="invPaymentTerms">30 Days Credit</span></div>
+                <div>Delivery: <span id="invDeliveryTerms">3 to 5 Days</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parties / Addresses -->
+          <div class="inv-parties-grid">
+            <div class="party-box">
+              <h4>Billed To (Customer):</h4>
+              <div class="party-name" id="invCustName">Customer Company Name</div>
+              <div id="invCustContact" style="font-weight: 600; color: #28443d; font-size: 12px; margin-top: 2px;"></div>
+              <div id="invCustGstin" style="font-weight: 700; color: #173b35; font-size: 12px; margin: 2px 0;"></div>
+              <p id="invCustBilling">Billing address text...</p>
+              <div id="invCustPhone" style="font-size: 11.5px; color: var(--muted); margin-top: 4px;"></div>
+              <div id="invCustEmail" style="font-size: 11.5px; color: var(--muted);"></div>
+            </div>
+
+            <div class="party-box">
+              <h4>Shipped / Delivered To:</h4>
+              <div class="party-name" id="invCustShippingName">Same as Consignee</div>
+              <p id="invCustShipping" style="margin-top: 6px;">Consignee delivery destination...</p>
+              <div style="font-size: 11px; color: var(--muted); margin-top: 8px;">
+                Despatch Mode: Road Transport / Door Delivery
+              </div>
+            </div>
+          </div>
+
+          <!-- Invoice Line Items Table -->
+          <table class="inv-items-table">
+            <thead>
+              <tr>
+                <th style="width: 35px;" class="text-center">#</th>
+                <th>Item Description & Specification</th>
+                <th style="width: 75px;" class="text-center">HSN</th>
+                <th style="width: 70px;" class="text-center">Qty</th>
+                <th style="width: 85px;" class="text-right">Rate (₹)</th>
+                <th style="width: 55px;" class="text-center">Disc</th>
+                <th style="width: 90px;" class="text-right">Taxable</th>
+                <th style="width: 55px;" class="text-center">GST</th>
+                <th style="width: 100px;" class="text-right">Amount (₹)</th>
+              </tr>
+            </thead>
+            <tbody id="invItemsTbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+
+          <!-- Financial Breakdown & Bank Section -->
+          <div class="inv-summary-container">
+            <div>
+              <div class="inv-bank-box">
+                <h5>Bank Account Details for Wire Transfer:</h5>
+                <div>Bank Name: <strong>HDFC Bank Ltd</strong></div>
+                <div>Account Name: <strong>TEI PACKAGE</strong></div>
+                <div>Account Number: <strong>50200088991122</strong> (Current A/C)</div>
+                <div>IFSC Code: <strong>HDFC0001234</strong> • Branch: <strong>Hosur Sipcot</strong></div>
+              </div>
+
+              <div class="amount-words-box" style="margin-top: 14px;">
+                <small>Amount in Words:</small>
+                <p id="invAmountInWords" style="font-size: 12px; font-weight: 700; color: #173b35;">Indian Rupees Zero Only</p>
+              </div>
+            </div>
+
+            <div>
+              <table class="inv-calc-table">
+                <tbody>
+                  <tr>
+                    <td>Subtotal:</td>
+                    <td id="invSubtotal">₹0.00</td>
+                  </tr>
+                  <tbody id="invTaxBreakdownRows">
+                    <!-- Tax breakdown rows -->
+                  </tbody>
+                  <tr id="invFreightRow" style="display: none;">
+                    <td>Freight / Transit:</td>
+                    <td id="invFreight">₹0.00</td>
+                  </tr>
+                  <tr id="invDiscountRow" style="display: none;">
+                    <td>Discount:</td>
+                    <td id="invDiscount">₹0.00</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td>Grand Total:</td>
+                    <td id="invGrandTotal">₹0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Terms and Signatures -->
+          <div class="inv-terms-signatures">
+            <div class="inv-terms">
+              <h5>Terms & Conditions:</h5>
+              <div id="invTermsText">
+                <div>1. Prices quoted are Ex-Works Hosur, Tamil Nadu.</div>
+                <div>2. GST 18% as applicable.</div>
+                <div>3. Freight & transit insurance at buyer's scope unless specified.</div>
+                <div>4. Quotation valid for 30 days from date of issuance.</div>
+                <div>5. Standard warranty against manufacturing defects for 12 months.</div>
+              </div>
+            </div>
+
+            <div class="inv-signature-box">
+              <div class="signature-space">
+                <span style="font-family: cursive; font-size: 18px; color: #173b35; opacity: 0.8;">TEI Package</span>
+              </div>
+              <p>For TEI PACKAGE<br><span style="font-weight: normal; font-size: 10px; color: var(--muted);">Authorized Signatory</span></p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       LIVE MULTI-USER DATABASE HUB SECTION
+       ======================================================================== -->
+  <section class="hub-section" id="database-hub">
+    <div class="container">
+      <div class="hub-header">
+        <h2><span>📊</span> Multi-User Database & Quotations Hub</h2>
+        <p>Live synchronized records stored in persistent SQLite database. Accessible concurrently by factory, sales, and accounts teams.</p>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="metrics-row">
+        <div class="metric-card accent-green">
+          <div class="metric-title">Database Status</div>
+          <div class="metric-value" style="font-size: 22px; color: #15803d;">Active (WAL)</div>
+          <div class="metric-sub">Concurrent Multi-Reader/Writer</div>
+        </div>
+        <div class="metric-card accent-amber">
+          <div class="metric-title">Saved Quotations</div>
+          <div class="metric-value" id="quoteListCountBadge">0 Records</div>
+          <div class="metric-sub">Syncing with SQLite DB</div>
+        </div>
+        <div class="metric-card accent-blue">
+          <div class="metric-title">Retention Data Queue</div>
+          <div class="metric-value" id="metricQueueTotal">0</div>
+          <div class="metric-sub">Active Records Monitored</div>
+        </div>
+        <div class="metric-card accent-red">
+          <div class="metric-title">Hosur Plant Production</div>
+          <div class="metric-value">5,000+</div>
+          <div class="metric-sub">Crates / Month Capacity</div>
+        </div>
+      </div>
+
+      <!-- Quotations Data Table Card -->
+      <div class="data-table-card">
+        <div class="data-table-toolbar">
+          <div class="search-filter-group">
+            <input type="text" id="quoteSearchInput" class="form-control" placeholder="🔍 Search by quote #, customer or company..." style="font-size: 13px;">
+            <select id="quoteStatusFilter" class="form-control" style="width: auto; font-size: 13px;">
+              <option value="">All Statuses</option>
+              <option value="Draft">Draft</option>
+              <option value="Sent">Sent</option>
+              <option value="Approved">Approved</option>
+              <option value="Fulfilled">Fulfilled</option>
+            </select>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="TEI_API.refreshQuotationsList()">🔄 Refresh DB</button>
+            <a href="#quotation-tool" class="btn btn-primary btn-sm">+ Create New Bill</a>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table-custom">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Quote Ref</th>
+                <th>Customer / Company</th>
+                <th style="width: 120px;">Date</th>
+                <th style="width: 130px;">Grand Total</th>
+                <th style="width: 110px;">Status</th>
+                <th style="width: 170px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="quotationsTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 24px; color: var(--muted);">Loading database records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About TEI Package Section -->
+  <section class="info-section" id="about">
+    <div class="container">
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>About TEI PACKAGE</h3>
+          <p>TEI PACKAGE is a premier industrial packaging manufacturer and supply chain partner based in <strong>Hosur, Tamil Nadu, India</strong>. Situated at the heart of South India's major automotive and manufacturing corridor, we supply returnable and heavy-duty packaging systems to OEMs, Tier-1 component makers, and logistics warehouses.</p>
+          <p style="margin-top: 10px;">Our capabilities include injection molded plastic crates, high-impact storage bins, foldable large containers (FLC), ESD anti-static packaging for electronics, PP corrugated boxes, and custom EPE foam fitments tailored to client component geometries.</p>
+        </div>
+
+        <div class="info-card" id="contact">
+          <h3>Contact & Factory Location</h3>
+          <p>For custom moulding, bulk tenders, or dispatch queries, reach our technical sales team directly:</p>
+          <ul class="contact-list" style="margin-bottom: 24px;">
+            <li>
+              <i>📍</i>
+              <div><strong>Works Address:</strong> Plot No. 42, Sipcot Industrial Complex, Phase-II, Hosur, Tamil Nadu - 635126, India</div>
+            </li>
+            <li>
+              <i>📞</i>
+              <div><strong>Sales Helpline:</strong> +91 98427 12345 / +91 94432 67890</div>
+            </li>
+            <li>
+              <i>✉️</i>
+              <div><strong>Email:</strong> sales@teipackage.com / info@teipackage.com</div>
+            </li>
+            <li>
+              <i>💬</i>
+              <div><strong>Direct WhatsApp:</strong> <a href="https://wa.me/919842712345" target="_blank" style="color: var(--accent); font-weight: bold;">+91 98427 12345 (Click to Chat)</a></div>
+            </li>
+          </ul>
+
+          <div style="background: var(--paper); padding: 18px; border-radius: var(--radius-md); border: 1px solid var(--line);">
+            <h4 style="font-size: 15px; color: var(--ink); margin-bottom: 10px;">⚡ Quick Industrial Inquiry & Quote Request</h4>
+            <form id="inquiryForm" style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="inqName" class="form-control" placeholder="Your Name *" required>
+                <input type="text" id="inqCompany" class="form-control" placeholder="Company / Factory">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="tel" id="inqPhone" class="form-control" placeholder="Mobile / Phone *" required>
+                <input type="email" id="inqEmail" class="form-control" placeholder="Email Address">
+              </div>
+              <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                <select id="inqProduct" class="form-control">
+                  <option value="Plastic Crates (Standard/Heavy Duty)">Plastic Crates (Heavy Duty)</option>
+                  <option value="Part Storage Bins">Part Storage Bins</option>
+                  <option value="FLC Foldable Containers">FLC Foldable Large Containers</option>
+                  <option value="Plastic Pallets">Heavy Duty Plastic Pallets</option>
+                  <option value="ESD Safe Trays">ESD Anti-Static Trays</option>
+                  <option value="Custom Returnable Packaging">Custom Returnable Packaging</option>
+                </select>
+                <input type="number" id="inqQty" class="form-control" placeholder="Quantity (Pcs)" value="100" min="1">
+              </div>
+              <textarea id="inqMsg" class="form-control" rows="2" placeholder="Tell us your component dimensions, payload, or delivery requirements..."></textarea>
+              <button type="submit" class="btn btn-primary btn-sm full">Submit Inquiry to Hosur Plant →</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div>
+        <strong>TEI PACKAGE</strong> • Industrial Packaging & Material Handling Solutions (Hosur, TN)
+        <div style="font-size: 11px; color: #7f978e; margin-top: 3px;">
+          Domain: teipackage.com • Quotation Bill Generator v2.0
+        </div>
+      </div>
+      <div>
+        <a href="#quotation-tool" style="color: #f3c88d; margin-right: 15px;">Create Quotation Bill</a>
+        <a href="#products" style="color: #d1ded7; margin-right: 15px;">Products</a>
+        <a href="#contact" style="color: #d1ded7;">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Saved Quotations History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Saved Quotations History</h3>
+        <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="saved-quotes-list" id="historyListContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/quotation.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
