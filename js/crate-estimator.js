@@ -129,6 +129,7 @@ let teiQuotes = [
     materials: JSON.parse(JSON.stringify(DEFAULT_MATERIALS))
   }
 ];
+window.teiQuotes = teiQuotes;
 
 let activeQuoteId = "TEI-DEMO-002";
 

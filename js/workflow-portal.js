@@ -837,8 +837,15 @@
     }
   }
 
+  function getEstimatorQuotes() {
+    if (typeof teiQuotes !== 'undefined' && Array.isArray(teiQuotes)) return teiQuotes;
+    if (Array.isArray(window.teiQuotes)) return window.teiQuotes;
+    return null;
+  }
+
   function populateEstimatorFromWorkflow(wf) {
-    if (!wf || typeof window.teiQuotes === 'undefined' || !Array.isArray(window.teiQuotes)) return;
+    const quotesArr = getEstimatorQuotes();
+    if (!wf || !quotesArr) return;
 
     const s1 = wf.step1 || {};
     const s2 = wf.step2 || {};
@@ -892,8 +899,8 @@
       notes: s4.notes || ''
     };
 
-    window.teiQuotes.length = 0;
-    window.teiQuotes.push(quoteObj);
+    quotesArr.length = 0;
+    quotesArr.push(quoteObj);
     if (typeof window.switchQuoteTab === 'function') {
       window.switchQuoteTab(quoteObj.id);
     }
@@ -960,7 +967,8 @@
       };
     }
 
-    const q = (typeof window.teiQuotes !== 'undefined' && window.teiQuotes[0]) || {};
+    const quotesArr = getEstimatorQuotes();
+    const q = (quotesArr && quotesArr[0]) || {};
     if (step === 3) {
       return {
         workOps: JSON.parse(JSON.stringify(q.workOps || []))
