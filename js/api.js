@@ -4,7 +4,7 @@
  */
 
 window.TEI_API = (function() {
-  const BASE_URL = window.location.origin;
+  let BASE_URL = window.location.protocol === 'file:' ? 'http://localhost:3000' : window.location.origin;
   let isBackendLive = false;
   let pollInterval = null;
 
@@ -41,17 +41,42 @@ window.TEI_API = (function() {
   // ----------------------------------------------------------------
   // 2. HEALTH & SERVER STATUS CHECK
   // ----------------------------------------------------------------
+  function getHealthCandidateBases() {
+    const proto = window.location.protocol;
+    const host = window.location.hostname || 'localhost';
+    const isLocal = proto === 'file:' || host === 'localhost' || host === '127.0.0.1' || host === '[::1]' ||
+      /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host);
+
+    if (proto === 'file:') {
+      return ['http://localhost:3000', 'http://127.0.0.1:3000'];
+    }
+    const candidates = [window.location.origin];
+    if (isLocal && window.location.port !== '3000') {
+      const sameHost3000 = `http://${host}:3000`;
+      if (!candidates.includes(sameHost3000)) candidates.push(sameHost3000);
+      if (host !== 'localhost') candidates.push('http://localhost:3000');
+      if (host !== '127.0.0.1') candidates.push('http://127.0.0.1:3000');
+    }
+    return candidates;
+  }
+
   async function checkServerHealth() {
-    try {
-      const res = await fetch(`${BASE_URL}/api/health`, { cache: 'no-store' });
-      if (res.ok) {
-        const data = await res.json();
-        isBackendLive = true;
-        updateServerStatusUI(data);
-        return true;
+    for (const candidate of getHealthCandidateBases()) {
+      try {
+        const res = await fetch(`${candidate}/api/health`, { cache: 'no-store' });
+        const contentType = (res.headers.get('content-type') || '').toLowerCase();
+        if (res.ok && contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data && data.status === 'online') {
+            BASE_URL = candidate;
+            isBackendLive = true;
+            updateServerStatusUI(data);
+            return true;
+          }
+        }
+      } catch (e) {
+        // Try next candidate
       }
-    } catch (e) {
-      // Offline / standalone mode
     }
     isBackendLive = false;
     updateServerStatusUI(null);

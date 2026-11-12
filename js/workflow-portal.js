@@ -13,11 +13,44 @@
     activeWorkflowId: null
   };
 
-  function getApiBase() {
-    if (window.location.protocol === 'file:') {
-      return 'http://localhost:3000';
+  let resolvedApiBase = null;
+
+  function isLocalHostname(host) {
+    if (!host) return true;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '[::1]') return true;
+    return /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(host);
+  }
+
+  function getCandidateApiBases() {
+    if (resolvedApiBase !== null) {
+      return [resolvedApiBase];
     }
-    return '';
+
+    const proto = window.location.protocol;
+    const host = window.location.hostname || 'localhost';
+    const port = window.location.port;
+
+    if (proto === 'file:') {
+      return ['http://localhost:3000', 'http://127.0.0.1:3000'];
+    }
+
+    const candidates = [''];
+    if (isLocalHostname(host) && port !== '3000') {
+      const sameHost3000 = `http://${host}:3000`;
+      if (!candidates.includes(sameHost3000)) candidates.push(sameHost3000);
+      if (host !== 'localhost') candidates.push('http://localhost:3000');
+      if (host !== '127.0.0.1') candidates.push('http://127.0.0.1:3000');
+    }
+    return candidates;
+  }
+
+  function buildStaticServerError(statusCode) {
+    const localNote = isLocalHostname(window.location.hostname) || window.location.protocol === 'file:'
+      ? 'Start the Node.js server ("node server.js" or "npm start") and open http://localhost:3000/quotation.html.'
+      : 'This page is currently served as static files without the Node.js backend (server.js) handling /api/* routes.';
+    const err = new Error(`Backend API unavailable (HTTP ${statusCode} from static server). ${localNote}`);
+    err.status = statusCode;
+    return err;
   }
 
   function toast(message, type) {
@@ -43,14 +76,60 @@
     if (state.token) {
       headers.Authorization = `Bearer ${state.token}`;
     }
-    const resp = await fetch(`${getApiBase()}${url}`, Object.assign({}, options, { headers }));
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok) {
-      const err = new Error(data.error || `Request failed (${resp.status})`);
-      err.status = resp.status;
-      throw err;
+
+    const candidates = getCandidateApiBases();
+    let staticStatus = 0;
+    let lastNetworkErr = null;
+
+    for (const base of candidates) {
+      let resp;
+      try {
+        resp = await fetch(`${base}${url}`, Object.assign({}, options, { headers }));
+      } catch (netErr) {
+        lastNetworkErr = netErr;
+        continue;
+      }
+
+      const contentType = (resp.headers.get('content-type') || '').toLowerCase();
+      const rawText = await resp.text();
+      let data = {};
+      let parsedJson = false;
+      if (rawText) {
+        try {
+          data = JSON.parse(rawText);
+          parsedJson = true;
+        } catch {
+          data = {};
+        }
+      }
+
+      const isApiJson = parsedJson && contentType.includes('application/json') &&
+        (Object.prototype.hasOwnProperty.call(data, 'success') || Object.prototype.hasOwnProperty.call(data, 'error'));
+
+      // Static servers / SPA fallbacks (e.g. Live Server, GitHub Pages, Nginx static) respond without API JSON
+      if ((resp.status === 405 || resp.status === 404 || resp.status === 501 || resp.status === 200) && !isApiJson) {
+        staticStatus = resp.status;
+        continue;
+      }
+
+      resolvedApiBase = base;
+      if (!resp.ok) {
+        const err = new Error(data.error || `Request failed (${resp.status})`);
+        err.status = resp.status;
+        throw err;
+      }
+      return data;
     }
-    return data;
+
+    if (staticStatus) {
+      throw buildStaticServerError(staticStatus);
+    }
+
+    throw new Error(
+      (lastNetworkErr && lastNetworkErr.message && !lastNetworkErr.message.includes('Failed to fetch'))
+        ? lastNetworkErr.message
+        : 'Cannot connect to TEI backend server. Run "node server.js" (or "npm start") and open http://localhost:3000/quotation.html.'
+    );
   }
 
   function showLoginView(message) {
