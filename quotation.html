@@ -5,10 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TEI PACKAGE | Custom Crate Quotation & Billing System</title>
   <meta name="description" content="Official Quotation & Bill Generator for TEI PACKAGE: Plastic Crates, Bins, FLCs, Labour & Material Estimator, GST, PDF & Excel export.">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20261112b">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23173b35'/><text x='50%' y='62%' font-size='42' font-weight='900' fill='%23c58b48' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
+  <style>
+    /* Zero-flash liquid glass init — strictly scoped to body.lg-login-active */
+    html, body.lg-login-active { margin: 0; padding: 0; min-height: 100vh; }
+    body.lg-login-active { background: #071410 !important; }
+    body.lg-login-active .announcement-bar,
+    body.lg-login-active .server-status-strip,
+    body.lg-login-active .navbar,
+    body.lg-login-active #mainAppShell { display: none !important; }
+  </style>
 </head>
-<body style="background: var(--paper);">
+<body class="lg-login-active">
 
   <!-- Announcement Bar -->
   <div class="announcement-bar">
@@ -46,19 +58,203 @@
 
       <div class="nav-actions">
         <a href="index.html" class="btn btn-secondary btn-sm">← Main Website</a>
-        <button class="btn btn-primary btn-sm" onclick="printActiveQuotation()">🖨️ Print / Save PDF</button>
+        <button class="btn btn-primary btn-sm" id="navPrintBtn" onclick="printActiveQuotation()" style="display: none;">🖨️ Print / Save PDF</button>
       </div>
     </div>
   </header>
 
-  <!-- Main Quotation Billing App Container -->
-  <main class="quote-app-section" style="padding-top: 20px;">
+  <!-- ====================================================================
+       ROLE-BASED ADMIN & OWNER LOGIN GATE — LIQUID GLASS DESIGN
+       ==================================================================== -->
+  <section id="authLoginSection" class="auth-login-section">
+
+    <!-- Liquid Glass ambient orbs -->
+    <div class="lg-orb lg-orb-1"></div>
+    <div class="lg-orb lg-orb-2"></div>
+    <div class="lg-orb lg-orb-3"></div>
+
+    <div class="auth-login-card">
+
+      <!-- LEFT: Brand & Stages Panel -->
+      <div class="auth-brand-panel">
+
+        <!-- Animated glass logo mark -->
+        <div class="lg-logo-mark">
+          <div class="lg-logo-inner">TEI</div>
+        </div>
+
+        <div class="lg-brand-badge">Multi-Stage Workflow Portal</div>
+        <h2 class="lg-heading">TEI PACKAGE<br><span>Quotation &amp; Approval</span></h2>
+        <p class="lg-subtext">
+          Each department admin logs in to complete only their assigned form section.
+          The Owner Admin analyzes all submitted forms, issues remarks, and grants final bill approval.
+        </p>
+
+        <div class="auth-role-matrix">
+          <div class="auth-role-item">
+            <div class="lg-stage-icon">1</div>
+            <div>
+              <strong>Stage 1 — Customer Desk</strong>
+              <span>Quotation No., Date, Customer, Contact &amp; Delivery Address</span>
+            </div>
+          </div>
+          <div class="auth-role-item">
+            <div class="lg-stage-icon">2</div>
+            <div>
+              <strong>Stage 2 — Design Engineering</strong>
+              <span>Crate Dimensions, Structure, Fitments &amp; Partition Details</span>
+            </div>
+          </div>
+          <div class="auth-role-item">
+            <div class="lg-stage-icon">3</div>
+            <div>
+              <strong>Stage 3 — Production Estimation</strong>
+              <span>Work / Labour Operations Costing Matrix</span>
+            </div>
+          </div>
+          <div class="auth-role-item">
+            <div class="lg-stage-icon">4</div>
+            <div>
+              <strong>Stage 4 — Material BOM &amp; Tax</strong>
+              <span>Material Cost Breakdown, Wastage % &amp; GST Calculation</span>
+            </div>
+          </div>
+          <div class="auth-role-item auth-role-owner">
+            <div class="lg-stage-icon lg-stage-icon-owner">★</div>
+            <div>
+              <strong>Owner Review &amp; Final Approval</strong>
+              <span>Full Form Analysis, Admin Remarks &amp; Bill Sign-off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg-footer-text">🔒 Authorized TEI PACKAGE Personnel Only</div>
+      </div>
+
+      <!-- RIGHT: Login Form Panel -->
+      <div class="auth-form-panel">
+
+        <!-- Floating particles inside glass -->
+        <div class="lg-particle lg-p1"></div>
+        <div class="lg-particle lg-p2"></div>
+        <div class="lg-particle lg-p3"></div>
+
+        <div class="lg-form-logo">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+            <circle cx="22" cy="22" r="21" fill="url(#lgGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+            <text x="22" y="27" text-anchor="middle" font-size="13" font-weight="900" fill="white" font-family="Arial">TEI</text>
+            <defs>
+              <radialGradient id="lgGrad" cx="35%" cy="30%">
+                <stop offset="0%" stop-color="#c58b48"/>
+                <stop offset="100%" stop-color="#173b35"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <h3 class="lg-form-title">Portal Sign In</h3>
+        <p class="lg-form-subtitle">Sign in with your assigned TEI credentials to access your workspace.</p>
+
+        <form id="portalLoginForm" onsubmit="return WF_PORTAL.handleLoginSubmit(event)" class="lg-form">
+          <div class="lg-field-group">
+            <label for="loginUsername" class="lg-label">Username</label>
+            <div class="lg-input-wrap">
+              <span class="lg-input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <input type="text" id="loginUsername" class="lg-input" placeholder="Enter your username" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="lg-field-group">
+            <label for="loginPassword" class="lg-label">Password</label>
+            <div class="lg-input-wrap">
+              <span class="lg-input-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <input type="password" id="loginPassword" class="lg-input" placeholder="Enter your password" required autocomplete="current-password">
+              <button type="button" class="lg-eye-btn" onclick="(function(b){const i=b.closest('.lg-input-wrap').querySelector('input');i.type=i.type==='password'?'text':'password';})(this)" tabindex="-1" aria-label="Toggle password">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="loginErrorMsg" class="lg-error-msg" style="display:none;"></div>
+
+          <button type="submit" id="loginSubmitBtn" class="lg-submit-btn">
+            <span class="lg-btn-shine"></span>
+            <span class="lg-btn-text">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px; margin-right:6px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Sign In to Assigned Form
+            </span>
+          </button>
+        </form>
+
+        <div class="lg-secure-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Secured • TEI PACKAGE Internal System
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Quotation Billing App Container (Hidden until Login) -->
+  <main id="mainAppShell" class="quote-app-section" style="padding-top: 20px; display: none;">
     <div class="container">
 
-      <!-- Tool Switcher Navigation (Custom Crate Estimator vs Multi-Item Tax Invoice) -->
-      <div class="tool-type-nav">
+      <!-- Logged-in Role & Workflow Switcher Header -->
+      <div id="roleHeaderBar" class="role-header-bar">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <span id="activeRoleBadge" class="role-badge-pill admin1">ADMIN 1</span>
+          <div>
+            <div id="activeUserDisplay" style="font-weight: 800; color: var(--ink); font-size: 14.5px;">Admin 1 — Customer Desk</div>
+            <div id="activeDeptDisplay" style="font-size: 12px; color: var(--muted);">Assigned View: Quotation & Customer Details (Form 1)</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <label for="wfSelector" style="font-size: 12px; font-weight: 700; color: var(--muted);">Active Quotation:</label>
+          <select id="wfSelector" class="form-control" style="min-width: 240px; padding: 6px 10px; font-size: 13px;" onchange="WF_PORTAL.selectWorkflow(this.value)">
+          </select>
+          <button type="button" id="btnNewWorkflow" class="btn btn-primary btn-sm" onclick="WF_PORTAL.createNewWorkflow()" style="display: none;">
+            ➕ New Quotation
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="WF_PORTAL.refreshWorkflows()">🔄 Refresh</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="WF_PORTAL.logout()">🚪 Logout</button>
+        </div>
+      </div>
+
+      <!-- Workflow Progress Strip -->
+      <div id="wfProgressBanner" class="workflow-queue-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <strong id="wfBannerQuoteNo" style="font-size: 15px; color: var(--ink);">TEI-WF-001</strong>
+            <span id="wfBannerCustomer" style="font-size: 13px; color: var(--muted);">—</span>
+            <span id="wfBannerStatus" class="wf-status-pill IN_PROGRESS">IN PROGRESS</span>
+          </div>
+          <div id="wfApprovedStamp" style="display: none;">
+            <span class="approved-stamp-badge">✅ APPROVED BY OWNER</span>
+          </div>
+        </div>
+        <div class="wf-progress-strip" id="wfStepsStrip">
+          <div class="wf-step-chip" id="chipStep1"><strong>1. Form 1 (Admin 1)</strong><div>Pending</div></div>
+          <div class="wf-step-chip" id="chipStep2"><strong>2. Form 2 (Admin 2)</strong><div>Pending</div></div>
+          <div class="wf-step-chip" id="chipStep3"><strong>3. Form 3 (Admin 3)</strong><div>Pending</div></div>
+          <div class="wf-step-chip" id="chipStep4"><strong>4. Form 4 BOM (Admin 4 / Owner)</strong><div>Pending</div></div>
+        </div>
+      </div>
+
+      <!-- Remark Alert Banner (Shown when Owner has sent a mistake remark to fix) -->
+      <div id="remarkAlertBanner" class="remark-alert-banner" style="display: none;">
+        <h4 id="remarkAlertTitle">⚠️ Action Required: Owner Remark to Refill</h4>
+        <div id="remarkAlertBody"></div>
+      </div>
+
+      <!-- Tool Switcher Navigation (Shown only to Owner Admin) -->
+      <div class="tool-type-nav" id="toolTypeNav" style="display: none;">
         <button class="tool-type-btn active" id="btnToolEstimator" onclick="switchToolTab('estimator')">
-          ⚙️ Custom Crate & Bin Quotation (Labour & Materials)
+          ⚙️ All Submitted Forms & Owner Analysis
         </button>
         <button class="tool-type-btn" id="btnToolStandard" onclick="switchToolTab('standard')">
           📋 Multi-Item Tax Invoice & Bill Generator
@@ -73,8 +269,8 @@
            ==================================================================== -->
       <div id="viewCrateEstimator">
 
-        <!-- Top Size / Quotation Tabs Bar -->
-        <div style="background: white; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 16px;">
+        <!-- Top Size / Quotation Tabs Bar (Owner only) -->
+        <div id="quoteSizeTabsBox" style="background: white; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 16px; display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
             <div>
               <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px;">Quotation Size Tabs:</span>
@@ -88,8 +284,8 @@
           </div>
         </div>
 
-        <!-- Estimator Action Toolbar -->
-        <div class="action-bar">
+        <!-- Estimator Action Toolbar (Owner only) -->
+        <div class="action-bar" id="estimatorActionBar" style="display: none;">
           <button class="btn btn-outline btn-sm" onclick="addNewQuoteTab()">➕ New Size Tab</button>
           <button class="btn btn-primary btn-sm" onclick="exportEstimatorCSV()">📊 Export CSV (TEI Format)</button>
           <label class="btn btn-outline btn-sm" style="cursor: pointer; margin-bottom: 0;">
@@ -102,15 +298,16 @@
         </div>
 
         <!-- Main Estimator Two-Column Layout -->
-        <div class="estimator-main-grid">
+        <div class="estimator-main-grid" id="estimatorMainGrid">
 
           <!-- Left Column: Crate & Bin Specifications -->
-          <div>
+          <div id="estimatorLeftCol">
 
-            <!-- Quotation Reference & Customer Panel -->
-            <div class="panel">
+            <!-- Quotation Reference & Customer Panel (ADMIN 1 FORM) -->
+            <div class="panel" id="panelStep1">
               <div class="panel-head">
                 <h3><span>📄</span> Quotation & Customer Details</h3>
+                <span class="role-badge-pill admin1" style="font-size: 10.5px;">Admin 1 Form</span>
               </div>
               <div class="form-grid-2">
                 <div class="form-group">
@@ -138,12 +335,20 @@
                   <textarea id="estAddress" class="form-control" rows="2" placeholder="Plant or destination address" oninput="updateSpecField('address', this.value)"></textarea>
                 </div>
               </div>
+              <div class="step-submit-bar" id="step1SubmitBar">
+                <span class="step-meta-info" id="step1MetaInfo" style="font-size: 12px; color: var(--muted);">Admin 1: Quotation & Customer Desk</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline btn-sm owner-remark-btn" onclick="WF_PORTAL.openRemarkModal('admin1')" style="display: none; border-color: #ef4444; color: #b91c1c;">🚩 Flag Mistake / Remark to Admin 1</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="btnSaveStep1" onclick="WF_PORTAL.saveStep(1)">💾 Save & Submit Form 1</button>
+                </div>
+              </div>
             </div>
 
-            <!-- Technical Dimensions & Specifications Panel -->
-            <div class="panel">
+            <!-- Technical Dimensions & Specifications Panel (ADMIN 2 FORM) -->
+            <div class="panel" id="panelStep2">
               <div class="panel-head">
                 <h3><span>📐</span> Crate Dimensions & Structure</h3>
+                <span class="role-badge-pill admin2" style="font-size: 10.5px;">Admin 2 Form</span>
               </div>
               <div class="form-grid-3">
                 <div class="form-group">
@@ -282,26 +487,36 @@
                   <input type="text" id="estCardHolderSize" class="form-control" placeholder="150x100 mm (1 pocket)" oninput="updateSpecField('cardHolderSize', this.value)">
                 </div>
               </div>
+              <div class="step-submit-bar" id="step2SubmitBar">
+                <span class="step-meta-info" id="step2MetaInfo" style="font-size: 12px; color: var(--muted);">Admin 2: Crate Dimensions & Fitments</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline btn-sm owner-remark-btn" onclick="WF_PORTAL.openRemarkModal('admin2')" style="display: none; border-color: #ef4444; color: #b91c1c;">🚩 Flag Mistake / Remark to Admin 2</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="btnSaveStep2" onclick="WF_PORTAL.saveStep(2)">💾 Save & Submit Form 2</button>
+                </div>
+              </div>
             </div>
 
           </div>
 
           <!-- Right Column: Labour Work & Material Cost Matrix -->
-          <div>
+          <div id="estimatorRightCol">
 
             <!-- Auto-Generated Product Description Box -->
-            <div class="product-desc-box">
+            <div class="product-desc-box" id="productDescBox">
               <small>✨ Auto-Generated Product Description</small>
               <p id="estProductDesc">Tuff plastic crate, Green colour, with netted tape, with dust cover.</p>
             </div>
 
-            <!-- Panel: Labour / Work Operations -->
-            <div class="panel">
+            <!-- Panel: Labour / Work Operations (ADMIN 3 FORM) -->
+            <div class="panel" id="panelStep3">
               <div class="panel-head">
                 <h3><span>🛠️</span> Work / Labour Operations Costing</h3>
-                <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
-                  Labour Total: <span id="estLabourTotal">₹0.00</span>
-                </span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span class="role-badge-pill admin3" style="font-size: 10.5px;">Admin 3 Form</span>
+                  <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
+                    Labour Total: <span id="estLabourTotal">₹0.00</span>
+                  </span>
+                </div>
               </div>
               <div class="table-responsive">
                 <table class="table-compact">
@@ -320,15 +535,25 @@
                   </tbody>
                 </table>
               </div>
+              <div class="step-submit-bar" id="step3SubmitBar">
+                <span class="step-meta-info" id="step3MetaInfo" style="font-size: 12px; color: var(--muted);">Admin 3: Work / Labour Operations Costing</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline btn-sm owner-remark-btn" onclick="WF_PORTAL.openRemarkModal('admin3')" style="display: none; border-color: #ef4444; color: #b91c1c;">🚩 Flag Mistake / Remark to Admin 3</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="btnSaveStep3" onclick="WF_PORTAL.saveStep(3)">💾 Save & Submit Form 3</button>
+                </div>
+              </div>
             </div>
 
-            <!-- Panel: Material Cost Breakdown (Bill of Materials) -->
-            <div class="panel">
+            <!-- Panel: Material Cost Breakdown (Bill of Materials) (ADMIN 4 / OWNER FORM) -->
+            <div class="panel" id="panelStep4">
               <div class="panel-head">
                 <h3><span>📦</span> Material Cost Breakdown (BOM)</h3>
-                <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
-                  Material Total: <span id="estMaterialTotal">₹0.00</span>
-                </span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span class="role-badge-pill admin4" style="font-size: 10.5px;">Admin 4 / Owner</span>
+                  <span style="font-size: 13px; font-weight: 700; color: var(--ink);">
+                    Material Total: <span id="estMaterialTotal">₹0.00</span>
+                  </span>
+                </div>
               </div>
               <div class="table-responsive">
                 <table class="table-compact">
@@ -361,10 +586,17 @@
                   </select>
                 </div>
               </div>
+              <div class="step-submit-bar" id="step4SubmitBar">
+                <span class="step-meta-info" id="step4MetaInfo" style="font-size: 12px; color: var(--muted);">Admin 4 / Owner: Material BOM & Taxes</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline btn-sm owner-remark-btn" onclick="WF_PORTAL.openRemarkModal('admin4')" style="display: none; border-color: #ef4444; color: #b91c1c;">🚩 Flag Mistake / Remark to Admin 4</button>
+                  <button type="button" class="btn btn-primary btn-sm" id="btnSaveStep4" onclick="WF_PORTAL.saveStep(4)">💾 Save & Submit Form 4</button>
+                </div>
+              </div>
             </div>
 
-            <!-- Panel: Total Cost & Pricing Summary -->
-            <div class="summary-card">
+            <!-- Panel: Total Cost & Pricing Summary (OWNER ANALYSIS & APPROVAL) -->
+            <div class="summary-card" id="panelOwnerSummary">
               <div class="summary-line">
                 <span>Unit Material Cost:</span>
                 <strong id="estMaterialTotalVal">₹0.00</strong>
@@ -400,7 +632,21 @@
                 <textarea id="estNotes" class="form-control" rows="2" placeholder="Tolerances, delivery schedule, or payment notes..." oninput="updateSpecField('notes', this.value)"></textarea>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px;">
+              <div id="ownerApprovalControls" style="display: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);">
+                <div style="font-size: 12px; font-weight: 800; color: var(--ink); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+                  👑 Owner Final Review & Approval Actions
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <button type="button" class="btn btn-success" id="btnOwnerApproveBill" onclick="WF_PORTAL.approveWorkflow()">
+                    ✅ Approve Bill (Final)
+                  </button>
+                  <button type="button" class="btn btn-danger" onclick="WF_PORTAL.openRemarkModal('admin1')">
+                    🚩 Send Mistake Remark
+                  </button>
+                </div>
+              </div>
+
+              <div id="ownerSummaryPrintButtons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px;">
                 <button class="btn btn-primary" onclick="triggerEstimatorPrint()">🖨️ Print Quotation</button>
                 <button class="btn btn-secondary" style="color: var(--ink); background: #e8f0ec;" onclick="switchToolTab('print')">👁️ View Official Bill</button>
               </div>
@@ -408,6 +654,33 @@
 
           </div>
 
+        </div>
+
+        <!-- Owner Analysis Queue & Remarks Log (Owner only) -->
+        <div class="workflow-queue-panel" id="ownerQueueCard" style="display: none; margin-top: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 style="margin: 0; font-size: 16px; color: var(--ink);">📊 Owner Analysis — All Quotations & Remarks History</h3>
+              <p style="margin: 3px 0 0; font-size: 12.5px; color: var(--muted);">Click any quotation row to inspect all 4 admin forms, send mistake remarks, or approve the final bill.</p>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table-compact">
+              <thead>
+                <tr>
+                  <th>Quotation No.</th>
+                  <th>Customer</th>
+                  <th>Stage Status (1–4)</th>
+                  <th>Total (₹)</th>
+                  <th>Open Remarks</th>
+                  <th>Workflow Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="ownerQueueTbody"></tbody>
+            </table>
+          </div>
+          <div id="ownerRemarkLogBox" style="margin-top: 14px;"></div>
         </div>
 
       </div>
@@ -874,6 +1147,7 @@
             </div>
 
             <div class="inv-signature-box">
+              <div id="printApprovalStampBox" style="margin-bottom: 6px;"></div>
               <div class="signature-space">
                 <span style="font-family: cursive; font-size: 18px; color: #173b35; opacity: 0.8;">TEI Package</span>
               </div>
@@ -887,10 +1161,40 @@
     </div>
   </main>
 
+  <!-- Owner Mistake Remark Modal -->
+  <div id="ownerRemarkModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 520px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0; font-size: 17px; color: var(--ink);">🚩 Send Mistake Remark to Admin</h3>
+        <button type="button" class="btn btn-outline btn-sm" onclick="WF_PORTAL.closeRemarkModal()">✕</button>
+      </div>
+      <form onsubmit="return WF_PORTAL.submitRemark(event)">
+        <div class="form-group">
+          <label for="remarkTargetAdmin">Select Admin Who Made Mistake (Form to Refill):</label>
+          <select id="remarkTargetAdmin" class="form-control" required>
+            <option value="admin1">Admin 1 — Form 1: Quotation & Customer Details</option>
+            <option value="admin2">Admin 2 — Form 2: Crate Dimensions & Fitments</option>
+            <option value="admin3">Admin 3 — Form 3: Work / Labour Operations Costing</option>
+            <option value="admin4">Admin 4 — Form 4: Material Cost Breakdown (BOM)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top: 12px;">
+          <label for="remarkMessageInput">Remark / Correction Instructions:</label>
+          <textarea id="remarkMessageInput" class="form-control" rows="3" placeholder="Explain clearly what field/rate needs to be corrected and refilled..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+          <button type="button" class="btn btn-outline" onclick="WF_PORTAL.closeRemarkModal()">Cancel</button>
+          <button type="submit" class="btn btn-danger">Send Remark to Admin</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- JavaScript Engines -->
-  <script src="js/crate-estimator.js"></script>
-  <script src="js/api.js"></script>
-  <script src="js/quotation.js"></script>
+  <script src="js/crate-estimator.js?v=20261112b"></script>
+  <script src="js/api.js?v=20261112b"></script>
+  <script src="js/quotation.js?v=20261112b"></script>
+  <script src="js/workflow-portal.js?v=20261112b"></script>
   <script>
     let activeTool = 'estimator';
 
@@ -927,9 +1231,9 @@
         if (vPrnStd) vPrnStd.style.display = 'none';
       }
 
-      bEst.classList.toggle("active", tab === 'estimator');
-      bStd.classList.toggle("active", tab === 'standard');
-      bPrn.classList.toggle("active", tab === 'print');
+      if (bEst) bEst.classList.toggle("active", tab === 'estimator');
+      if (bStd) bStd.classList.toggle("active", tab === 'standard');
+      if (bPrn) bPrn.classList.toggle("active", tab === 'print');
 
       if (tab === 'print') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
