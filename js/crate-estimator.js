@@ -1,10 +1,24 @@
 /**
  * TEI PACKAGE - Custom Crate & Bin Quotation Estimator
- * Models exact industrial cost estimation: Technical specs, Labour work matrix,
- * Bill of Materials, Auto-generated description, Multi-tab sizes, and CSV/PDF export.
+ * Models exact industrial cost estimation: Crate Dimensions & Structure,
+ * Partition & Sheet Dimension Formula (HDPE 3mm/5mm/8mm, XLPE 2mm, Welding Rod, Adisave),
+ * Labour work matrix, BOM, Auto-generated description, Multi-tab sizes, and CSV/PDF export.
+ * Clean, reactive, non-duplicate partition data architecture.
  */
 
-// Initial Quotes State
+// Master Material Standard Specifications ("Cost Break Down")
+const MASTER_COST_BREAKDOWN = [
+  { material: "HDPE 3 MM", stdLength: 2000, stdWidth: 1200, price: 1383, totalSize: 2400000, wastagePercent: 1.2 },
+  { material: "HDPE 5 MM", stdLength: 2000, stdWidth: 1200, price: 2268, totalSize: 2400000, wastagePercent: 1.2 },
+  { material: "HDPE 8 MM", stdLength: 2000, stdWidth: 1200, price: 3830.40, totalSize: 2400000, wastagePercent: 1.2 },
+  { material: "XLPE 2 mm", stdLength: 100000, stdWidth: 980, price: 17400, totalSize: 98000000, wastagePercent: 1.2 },
+  { material: "Welding Rod", stdLength: 5000, stdWidth: 1, price: 180, totalSize: 5000, wastagePercent: 1.2 },
+  { material: "DUST COVER", stdLength: 0, stdWidth: 0, price: 600, totalSize: 0, wastagePercent: 1.2 },
+  { material: "ADISAVE", stdLength: 5000, stdWidth: 1, price: 10, totalSize: 5000, wastagePercent: 1.2 }
+];
+window.MASTER_COST_BREAKDOWN = MASTER_COST_BREAKDOWN;
+
+// Initial Labour Work Operations
 const DEFAULT_WORK_OPS = [
   { id: "cutting", name: "Cutting", min: 0, hrs: 0, manHrs: 0, rate: 0, amount: 0 },
   { id: "drilling", name: "Drilling", min: 0, hrs: 0, manHrs: 0, rate: 0, amount: 0 },
@@ -17,10 +31,11 @@ const DEFAULT_WORK_OPS = [
   { id: "washingCleaning", name: "Washing/Cleaning", min: 0, hrs: 0, manHrs: 0, rate: 0, amount: 0 }
 ];
 
+// Initial Bill of Materials
 const DEFAULT_MATERIALS = [
   { id: "plasticCrate", name: "Plastic crate", qty: 1, rate: 0, amount: 0 },
-  { id: "hdpeSheet", name: "HDPE sheet", qty: 0, rate: 0, amount: 0 },
-  { id: "xlpeSheet", name: "XLPE sheet", qty: 0, rate: 0, amount: 0 },
+  { id: "hdpeSheet", name: "HDPE sheet (Partitions)", qty: 0, rate: 0, amount: 0 },
+  { id: "xlpeSheet", name: "XLPE sheet (Fitments)", qty: 0, rate: 0, amount: 0 },
   { id: "nettedTape", name: "Netted tape", qty: 0, rate: 0, amount: 0 },
   { id: "dustCover", name: "Dust cover", qty: 0, rate: 0, amount: 0 },
   { id: "rivets", name: "Rivets", qty: 0, rate: 0, amount: 0 },
@@ -29,6 +44,7 @@ const DEFAULT_MATERIALS = [
   { id: "cardHolder", name: "Card holder", qty: 0, rate: 0, amount: 0 }
 ];
 
+// Quote Dataset with Clean Deduplicated Partition Matrix
 let teiQuotes = [
   {
     id: "TEI-DEMO-001",
@@ -52,7 +68,10 @@ let teiQuotes = [
     bottomType: "Reinforced Solid",
     hdpeThickness: "3.0",
     xlpeThickness: "10.0",
-    sheet1: "550 x 350 x 2",
+    // Clean partition structure (Zero duplicate rows)
+    partitions: [
+      { material: "HDPE 3 MM", l: 560, h: 150, qty: 6, weldingCost: 0 }
+    ],
     nettedTape: "Yes",
     dustCover: "Yes",
     rivetMaterial: "Aluminium",
@@ -79,8 +98,8 @@ let teiQuotes = [
     ],
     materials: [
       { id: "plasticCrate", name: "Plastic crate", qty: 1, rate: 580, amount: 580.00 },
-      { id: "hdpeSheet", name: "HDPE sheet", qty: 1, rate: 120, amount: 120.00 },
-      { id: "xlpeSheet", name: "XLPE sheet", qty: 2, rate: 85, amount: 170.00 },
+      { id: "hdpeSheet", name: "HDPE sheet (Partitions)", qty: 1, rate: 348.52, amount: 348.52 },
+      { id: "xlpeSheet", name: "XLPE sheet (Fitments)", qty: 0, rate: 0, amount: 0 },
       { id: "nettedTape", name: "Netted tape", qty: 4, rate: 8, amount: 32.00 },
       { id: "dustCover", name: "Dust cover", qty: 1, rate: 75, amount: 75.00 },
       { id: "rivets", name: "Rivets", qty: 16, rate: 1.5, amount: 24.00 },
@@ -109,9 +128,9 @@ let teiQuotes = [
     quantity: 1,
     colour: "Green",
     bottomType: "",
-    hdpeThickness: "",
+    hdpeThickness: "3.0",
     xlpeThickness: "",
-    sheet1: " x  x ",
+    partitions: [],
     nettedTape: "Yes",
     dustCover: "Yes",
     rivetMaterial: "",
@@ -123,7 +142,7 @@ let teiQuotes = [
     cardHolderSize: "",
     cardHolderPockets: "",
     wastagePercent: 0,
-    gstPercent: 0,
+    gstPercent: 18,
     notes: "",
     workOps: JSON.parse(JSON.stringify(DEFAULT_WORK_OPS)),
     materials: JSON.parse(JSON.stringify(DEFAULT_MATERIALS))
@@ -131,7 +150,18 @@ let teiQuotes = [
 ];
 window.teiQuotes = teiQuotes;
 
-let activeQuoteId = "TEI-DEMO-002";
+let activeQuoteId = "TEI-DEMO-001";
+
+// Helper format functions
+function formatINR(num) {
+  if (typeof window.formatINR === "function") return window.formatINR(num);
+  return Number(num || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
@@ -193,9 +223,9 @@ window.addNewQuoteTab = function() {
     quantity: 1,
     colour: "Green",
     bottomType: "",
-    hdpeThickness: "",
+    hdpeThickness: "3.0",
     xlpeThickness: "",
-    sheet1: " x  x ",
+    partitions: [],
     nettedTape: "Yes",
     dustCover: "Yes",
     rivetMaterial: "",
@@ -207,7 +237,7 @@ window.addNewQuoteTab = function() {
     cardHolderSize: "",
     cardHolderPockets: "",
     wastagePercent: 0,
-    gstPercent: 0,
+    gstPercent: 18,
     notes: "",
     workOps: JSON.parse(JSON.stringify(DEFAULT_WORK_OPS)),
     materials: JSON.parse(JSON.stringify(DEFAULT_MATERIALS))
@@ -264,7 +294,6 @@ function loadQuoteData(id) {
   setFormVal("estBottomType", q.bottomType);
   setFormVal("estHdpeThickness", q.hdpeThickness);
   setFormVal("estXlpeThickness", q.xlpeThickness);
-  setFormVal("estSheet1", q.sheet1);
   setFormVal("estNettedTape", q.nettedTape);
   setFormVal("estDustCover", q.dustCover);
   setFormVal("estRivetMaterial", q.rivetMaterial);
@@ -279,6 +308,7 @@ function loadQuoteData(id) {
   setFormVal("estGstPercent", q.gstPercent);
   setFormVal("estNotes", q.notes);
 
+  renderPartitionsTable(q);
   renderWorkOpsTable(q);
   renderMaterialsTable(q);
   recalculateEstimator(q);
@@ -288,6 +318,213 @@ function setFormVal(id, val) {
   const el = document.getElementById(id);
   if (el) el.value = val !== undefined && val !== null ? val : "";
 }
+
+// ==========================================================================
+// PARTITIONS & SHEET SIZING FORMULA MATRIX (Cost Break Down Engine)
+// Replaces static duplicate rows with reactive dynamic non-NaN calculations
+// ==========================================================================
+
+function renderPartitionsTable(q) {
+  const tbody = document.getElementById("partitionsTbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  if (!q.partitions || q.partitions.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="11" style="text-align: center; padding: 18px; color: var(--muted);">
+          No custom partitions added yet. Click "+ Add Partition Piece" below to calculate sheet sizes and costs.
+        </td>
+      </tr>
+    `;
+    setText("partTotalArea", "0 mm²");
+    setText("partHdpeCost", "₹0.00");
+    setText("partXlpeCost", "₹0.00");
+    setText("partGrandCost", "₹0.00");
+    return;
+  }
+
+  let totalArea = 0;
+  let totalHdpe = 0;
+  let totalXlpe = 0;
+  let grandPartitionCost = 0;
+
+  q.partitions.forEach((p, idx) => {
+    const matSpec = MASTER_COST_BREAKDOWN.find(m => m.material === p.material) || MASTER_COST_BREAKDOWN[0];
+    const l = parseFloat(p.l) || 0;
+    const h = parseFloat(p.h) || 0;
+    const qty = parseFloat(p.qty) || 0;
+    const totalSize = l * h * qty;
+    totalArea += totalSize;
+
+    // Cutting Yield (Pieces that can be made per standard raw sheet)
+    let yieldPerSheet = 0;
+    if (l > 0 && h > 0 && matSpec.stdLength > 0 && matSpec.stdWidth > 0) {
+      const normal = Math.floor(matSpec.stdLength / l) * Math.floor(matSpec.stdWidth / h);
+      const rotated = Math.floor(matSpec.stdLength / h) * Math.floor(matSpec.stdWidth / l);
+      yieldPerSheet = Math.max(normal, rotated);
+    }
+
+    // Exact Industrial Sheet Cost / Bin formula with wastage
+    let sheetCost = 0;
+    if (matSpec.totalSize > 0) {
+      const ratePerSqMm = (matSpec.price * matSpec.wastagePercent) / matSpec.totalSize;
+      sheetCost = totalSize * ratePerSqMm;
+    }
+
+    const weldGlue = parseFloat(p.weldingCost) || 0;
+    const rowTotal = sheetCost + weldGlue;
+
+    if (p.material.startsWith("HDPE")) {
+      totalHdpe += rowTotal;
+    } else if (p.material.startsWith("XLPE")) {
+      totalXlpe += rowTotal;
+    }
+    grandPartitionCost += rowTotal;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>
+        <select onchange="updatePartitionField(${idx}, 'material', this.value)" style="font-size: 11.5px; padding: 4px;">
+          ${MASTER_COST_BREAKDOWN.filter(m => m.stdLength > 0).map(m => `
+            <option value="${m.material}" ${m.material === p.material ? 'selected' : ''}>${m.material}</option>
+          `).join('')}
+        </select>
+      </td>
+      <td style="text-align: center; color: var(--muted); font-weight: 700;">${idx + 1}</td>
+      <td style="text-align: center;">
+        <input type="number" min="0" step="1" value="${p.l || 0}" 
+               oninput="updatePartitionField(${idx}, 'l', this.value)" 
+               class="col-input-num"
+               style="width: 85px; text-align: center; font-size: 13px; font-weight: 700;">
+      </td>
+      <td style="text-align: center;">
+        <input type="number" min="0" step="1" value="${p.h || 0}" 
+               oninput="updatePartitionField(${idx}, 'h', this.value)" 
+               class="col-input-num"
+               style="width: 85px; text-align: center; font-size: 13px; font-weight: 700;">
+      </td>
+      <td style="text-align: center;">
+        <input type="number" min="0" step="1" value="${p.qty || 0}" 
+               oninput="updatePartitionField(${idx}, 'qty', this.value)" 
+               class="col-input-num"
+               style="width: 75px; text-align: center; font-size: 13px; font-weight: 700;">
+      </td>
+      <td style="text-align: right; font-variant-numeric: tabular-nums; font-weight: 700;">
+        ${totalSize.toLocaleString('en-IN')}
+      </td>
+      <td style="text-align: center; color: var(--power-blue); font-weight: 800; font-size: 13px;">
+        ${yieldPerSheet}
+      </td>
+      <td style="text-align: right; font-variant-numeric: tabular-nums; font-weight: 700;">
+        ₹${formatINR(sheetCost)}
+      </td>
+      <td style="text-align: center;">
+        <input type="number" min="0" step="1" value="${p.weldingCost || 0}" 
+               oninput="updatePartitionField(${idx}, 'weldingCost', this.value)" 
+               class="col-input-num"
+               style="width: 75px; text-align: center; font-size: 13px; font-weight: 700;">
+      </td>
+      <td style="text-align: right; font-weight: 800; color: var(--power-blue); font-variant-numeric: tabular-nums;">
+        ₹${formatINR(rowTotal)}
+      </td>
+      <td style="text-align: center;">
+        <button type="button" class="btn-remove-row" onclick="removePartitionRow(${idx})" title="Remove partition piece">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Update Summary UI
+  setText("partTotalArea", `${totalArea.toLocaleString('en-IN')} mm²`);
+  setText("partHdpeCost", `₹${formatINR(totalHdpe)}`);
+  setText("partXlpeCost", `₹${formatINR(totalXlpe)}`);
+  setText("partGrandCost", `₹${formatINR(grandPartitionCost)}`);
+
+  // Direct Synchronization into Form 4 Material BOM
+  const hdpeMat = q.materials.find(m => m.id === "hdpeSheet");
+  if (hdpeMat) {
+    hdpeMat.qty = totalHdpe > 0 ? 1 : 0;
+    hdpeMat.rate = Math.round(totalHdpe * 100) / 100;
+    hdpeMat.amount = hdpeMat.rate;
+  }
+  const xlpeMat = q.materials.find(m => m.id === "xlpeSheet");
+  if (xlpeMat) {
+    xlpeMat.qty = totalXlpe > 0 ? 1 : 0;
+    xlpeMat.rate = Math.round(totalXlpe * 100) / 100;
+    xlpeMat.amount = xlpeMat.rate;
+  }
+}
+
+// Add New Partition Piece
+window.addNewPartitionRow = function() {
+  const q = teiQuotes.find(item => item.id === activeQuoteId);
+  if (!q) return;
+  if (!q.partitions) q.partitions = [];
+  q.partitions.push({
+    material: "HDPE 3 MM",
+    l: 0,
+    h: 0,
+    qty: 1,
+    weldingCost: 0
+  });
+  renderPartitionsTable(q);
+  renderMaterialsTable(q);
+  recalculateEstimator(q);
+};
+
+// Remove Partition Piece
+window.removePartitionRow = function(idx) {
+  const q = teiQuotes.find(item => item.id === activeQuoteId);
+  if (!q || !q.partitions || !q.partitions[idx]) return;
+  q.partitions.splice(idx, 1);
+  renderPartitionsTable(q);
+  renderMaterialsTable(q);
+  recalculateEstimator(q);
+};
+
+// Update Partition Field
+window.updatePartitionField = function(idx, field, val) {
+  const q = teiQuotes.find(item => item.id === activeQuoteId);
+  if (!q || !q.partitions || !q.partitions[idx]) return;
+  if (field === "material") {
+    q.partitions[idx].material = val;
+  } else {
+    q.partitions[idx][field] = parseFloat(val) || 0;
+  }
+  renderPartitionsTable(q);
+  renderMaterialsTable(q);
+  recalculateEstimator(q);
+};
+
+// Master Raw Material Standards ("Cost Break Down") Modal
+function renderMasterRatesTable() {
+  const tbody = document.getElementById("masterRatesTbody");
+  if (!tbody) return;
+  tbody.innerHTML = MASTER_COST_BREAKDOWN.map(m => `
+    <tr>
+      <td><strong>${m.material}</strong></td>
+      <td style="text-align: right;">${m.stdLength ? m.stdLength.toLocaleString('en-IN') : '-'}</td>
+      <td style="text-align: right;">${m.stdWidth ? m.stdWidth.toLocaleString('en-IN') : '-'}</td>
+      <td style="text-align: right; font-weight: 700; color: var(--purple-primary);">₹${m.price.toLocaleString('en-IN')}</td>
+      <td style="text-align: right;">${m.totalSize ? m.totalSize.toLocaleString('en-IN') : '-'}</td>
+      <td style="text-align: right;">${m.wastagePercent} (${Math.round((m.wastagePercent - 1) * 100)}%)</td>
+    </tr>
+  `).join('');
+}
+
+window.toggleMasterRatesModal = function() {
+  const modal = document.getElementById("masterRatesModal");
+  if (!modal) return;
+  modal.classList.toggle("active");
+  if (modal.classList.contains("active")) {
+    renderMasterRatesTable();
+  }
+};
+
+// ==========================================================================
+// LABOUR / WORK OPERATIONS & MATERIAL BOM
+// ==========================================================================
 
 // Render Labour / Work Matrix
 function renderWorkOpsTable(q) {
@@ -299,20 +536,26 @@ function renderWorkOpsTable(q) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><strong>${op.name}</strong></td>
-      <td>
+      <td style="text-align: center;">
         <input type="number" min="0" step="1" value="${op.min || 0}" 
-               oninput="updateWorkField(${idx}, 'min', this.value)" style="text-align: right;">
+               oninput="updateWorkField(${idx}, 'min', this.value)" 
+               class="col-input-num"
+               style="width: 80px; text-align: center; font-size: 13px; font-weight: 700;">
       </td>
-      <td style="text-align: right;" id="op-hrs-${idx}">${op.hrs.toFixed(2)}</td>
-      <td>
+      <td style="text-align: right; font-weight: 700; font-variant-numeric: tabular-nums;" id="op-hrs-${idx}">${op.hrs.toFixed(2)}</td>
+      <td style="text-align: center;">
         <input type="number" min="0" step="0.01" value="${op.manHrs !== undefined ? op.manHrs : op.hrs.toFixed(2)}" 
-               oninput="updateWorkField(${idx}, 'manHrs', this.value)" style="text-align: right;">
+               oninput="updateWorkField(${idx}, 'manHrs', this.value)" 
+               class="col-input-num"
+               style="width: 85px; text-align: center; font-size: 13px; font-weight: 700;">
       </td>
-      <td>
+      <td style="text-align: center;">
         <input type="number" min="0" step="1" value="${op.rate || 0}" 
-               oninput="updateWorkField(${idx}, 'rate', this.value)" style="text-align: right;">
+               oninput="updateWorkField(${idx}, 'rate', this.value)" 
+               class="col-input-num"
+               style="width: 85px; text-align: center; font-size: 13px; font-weight: 700;">
       </td>
-      <td style="text-align: right; font-weight: 700; color: var(--ink);" id="op-amount-${idx}">
+      <td style="text-align: right; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums;" id="op-amount-${idx}">
         ₹${formatINR(op.amount)}
       </td>
     `;
@@ -330,13 +573,17 @@ function renderMaterialsTable(q) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><strong>${mat.name}</strong></td>
-      <td>
+      <td style="text-align: center;">
         <input type="number" min="0" step="1" value="${mat.qty || 0}" 
-               oninput="updateMaterialField(${idx}, 'qty', this.value)" style="text-align: right;">
+               oninput="updateMaterialField(${idx}, 'qty', this.value)" 
+               class="col-input-num"
+               style="width: 75px; text-align: center; font-size: 13px; font-weight: 700;">
       </td>
-      <td>
+      <td style="text-align: center;">
         <input type="number" min="0" step="0.5" value="${mat.rate || 0}" 
-               oninput="updateMaterialField(${idx}, 'rate', this.value)" style="text-align: right;">
+               oninput="updateMaterialField(${idx}, 'rate', this.value)" 
+               class="col-input-num"
+               style="width: 85px; text-align: center; font-size: 13px; font-weight: 700;">
       </td>
       <td style="text-align: right; font-weight: 700; color: var(--ink);" id="mat-amount-${idx}">
         ₹${formatINR(mat.amount)}
@@ -376,7 +623,6 @@ window.updateWorkField = function(idx, field, value) {
   if (field === "min") {
     op.min = numVal;
     op.hrs = numVal / 60;
-    // Default manHrs to hrs if not explicitly modified
     op.manHrs = op.hrs;
     const hrsEl = document.getElementById(`op-hrs-${idx}`);
     if (hrsEl) hrsEl.textContent = op.hrs.toFixed(2);
@@ -431,6 +677,17 @@ function generateProductDescription(q) {
   if (q.bottomType) {
     parts.push(`${q.bottomType} bottom`);
   }
+
+  // Include Partition specifications if present
+  if (q.partitions && q.partitions.length > 0) {
+    const partSummary = q.partitions
+      .filter(p => p.l > 0 && p.h > 0 && p.qty > 0)
+      .map(p => `${p.material} partition (${p.l}x${p.h} mm, ${p.qty} nos)`);
+    if (partSummary.length > 0) {
+      parts.push(partSummary.join(", "));
+    }
+  }
+
   if (q.nettedTape === "Yes") {
     parts.push("with netted tape");
   }
@@ -481,7 +738,9 @@ function recalculateEstimator(q) {
 
   // Update UI Elements
   setText("estLabourTotal", `₹${formatINR(labourTotal)}`);
+  setText("estLabourTotalVal", `₹${formatINR(labourTotal)}`);
   setText("estMaterialTotal", `₹${formatINR(materialTotal)}`);
+  setText("estMaterialTotalVal", `₹${formatINR(materialTotal)}`);
   setText("estUnitCost", `₹${formatINR(unitCost)}`);
   setText("estSubtotal", `₹${formatINR(subtotal)}`);
   setText("estGstAmount", `₹${formatINR(gstAmount)} (${gstRate}%)`);
@@ -535,12 +794,22 @@ function syncEstimatorToPrint(q, calc) {
   setText("prGrandTotal", `₹${formatINR(calc.grandTotal)}`);
 
   // Dimensions & Specs summary
-  const dimStr = `OD: ${q.odLength || '-'} x ${q.odWidth || '-'} x ${q.odHeight || '-'} mm | ID: ${q.idLength || '-'} x ${q.idWidth || '-'} x ${q.idHeight || '-'} mm | Colour: ${q.colour || '-'} | Make: ${q.make || '-'}`;
+  let dimStr = `OD: ${q.odLength || '-'}x${q.odWidth || '-'}x${q.odHeight || '-'} mm | ID: ${q.idLength || '-'}x${q.idWidth || '-'}x${q.idHeight || '-'} mm | Colour: ${q.colour || '-'} | Make: ${q.make || '-'}`;
+  if (q.partitions && q.partitions.length > 0) {
+    const pStr = q.partitions
+      .filter(p => p.l > 0 && p.h > 0 && p.qty > 0)
+      .map(p => `${p.material.split(' ')[0]} ${p.l}x${p.h}x${p.qty}`)
+      .join(', ');
+    if (pStr) dimStr += ` | Partitions: ${pStr}`;
+  }
   setText("prSpecsSummary", dimStr);
   setText("prNotes", q.notes || "Standard manufacturing tolerances apply.");
 }
 
-// Export to exact TEI CSV format
+// ==========================================================================
+// EXCEL / CSV EXPORT & IMPORT (Clean Deduplicated Format)
+// ==========================================================================
+
 window.exportEstimatorCSV = function() {
   const q = teiQuotes.find(item => item.id === activeQuoteId);
   if (!q) return;
@@ -560,10 +829,40 @@ window.exportEstimatorCSV = function() {
   const description = generateProductDescription(q);
 
   let lines = [];
+  lines.push("Cost Break Down Master Standards,,,,,,");
+  lines.push("Material,Std Length (A),Std Breath (B),Price,Total Size MM,% of Wastage");
+  MASTER_COST_BREAKDOWN.forEach(m => {
+    lines.push(`"${m.material}",${m.stdLength},${m.stdWidth},${m.price},${m.totalSize},${m.wastagePercent}`);
+  });
+  lines.push("");
+
+  lines.push("Crate Dimensions & Structure Partitions,,,,,,,,");
+  lines.push("Material,Item,L,H,No of Sheet /Bin,Total Size,Yield/Sheet,Sheet Cost /Bin,Welding Rod /ADISAVE,Total Cost /Bin");
+  if (q.partitions && q.partitions.length > 0) {
+    q.partitions.forEach((p, idx) => {
+      const matSpec = MASTER_COST_BREAKDOWN.find(m => m.material === p.material) || MASTER_COST_BREAKDOWN[0];
+      const totalSize = (p.l || 0) * (p.h || 0) * (p.qty || 0);
+      let yieldPerSheet = 0;
+      if (p.l > 0 && p.h > 0 && matSpec.stdLength > 0 && matSpec.stdWidth > 0) {
+        const normal = Math.floor(matSpec.stdLength / p.l) * Math.floor(matSpec.stdWidth / p.h);
+        const rotated = Math.floor(matSpec.stdLength / p.h) * Math.floor(matSpec.stdWidth / p.l);
+        yieldPerSheet = Math.max(normal, rotated);
+      }
+      let sheetCost = 0;
+      if (matSpec.totalSize > 0) {
+        const ratePerSqMm = (matSpec.price * matSpec.wastagePercent) / matSpec.totalSize;
+        sheetCost = totalSize * ratePerSqMm;
+      }
+      const totalRow = sheetCost + (p.weldingCost || 0);
+      lines.push(`"${p.material}",${idx + 1},${p.l || 0},${p.h || 0},${p.qty || 0},${totalSize},${yieldPerSheet},${sheetCost.toFixed(2)},${p.weldingCost || 0},${totalRow.toFixed(2)}`);
+    });
+  }
+  lines.push("");
+
   lines.push("Field,Value");
   lines.push(`Quotation No,${q.quotationNo || ''}`);
   lines.push(`Date,${q.date || ''}`);
-  lines.push(`Customer,${q.customer || ''}`);
+  lines.push(`Customer,"${(q.customer || '').replace(/"/g, '""')}"`);
   lines.push(`Contact,${q.contact || ''}`);
   lines.push(`Address,"${(q.address || '').replace(/"/g, '""')}"`);
   lines.push(`TEI Part Name,${q.partName || ''}`);
@@ -581,7 +880,6 @@ window.exportEstimatorCSV = function() {
   lines.push(`Bottom Type,${q.bottomType || ''}`);
   lines.push(`HDPE Thickness (mm),${q.hdpeThickness || ''}`);
   lines.push(`XLPE Thickness (mm),${q.xlpeThickness || ''}`);
-  lines.push(`Sheet 1 (Sheet 2) L x H x Qty,${q.sheet1 || ' x  x '}`);
   lines.push(`Netted Tape,${q.nettedTape || 'No'}`);
   lines.push(`Dust Cover,${q.dustCover || 'No'}`);
   lines.push(`Rivet Material,${q.rivetMaterial || ''}`);
@@ -603,7 +901,7 @@ window.exportEstimatorCSV = function() {
     lines.push(`Cost: ${mat.name} (qty x rate),${mat.qty || ''} x ${mat.rate || ''} = ${mat.amount.toFixed(2)}`);
   });
 
-  lines.push(`"Wastage % (internal only, not in totals)",${q.wastagePercent || ''}`);
+  lines.push(`"Wastage % (internal indicator)",${q.wastagePercent || ''}`);
   lines.push(`Material Total,${materialTotal}`);
   lines.push(`Labour Total,${labourTotal}`);
   lines.push(`Subtotal,${subtotal}`);
@@ -646,10 +944,35 @@ function parseAndApplyCSV(csvText) {
   const q = teiQuotes.find(item => item.id === activeQuoteId);
   if (!q) return;
 
+  let inPartitions = false;
+  let parsedPartitions = [];
+
   lines.forEach(line => {
-    if (!line.trim() || line.startsWith("Field,Value")) return;
-    
-    // Parse key-value pair respecting quotes
+    const trimmed = line.trim();
+    if (!trimmed) return;
+
+    if (trimmed.startsWith("Crate Dimensions & Structure Partitions")) {
+      inPartitions = true;
+      return;
+    }
+    if (inPartitions) {
+      if (trimmed.startsWith("Field,Value")) {
+        inPartitions = false;
+      } else if (!trimmed.startsWith("Material,Item")) {
+        const parts = trimmed.split(",").map(p => p.replace(/"/g, '').trim());
+        if (parts.length >= 5 && parts[0] && parts[0] !== "Total" && !isNaN(parseFloat(parts[2]))) {
+          parsedPartitions.push({
+            material: parts[0],
+            l: parseFloat(parts[2]) || 0,
+            h: parseFloat(parts[3]) || 0,
+            qty: parseFloat(parts[4]) || 0,
+            weldingCost: parseFloat(parts[8]) || 0
+          });
+        }
+      }
+      return;
+    }
+
     const match = line.match(/^"?(.*?)"?,\s*"?(.*?)"?$/);
     if (!match) return;
 
@@ -676,7 +999,6 @@ function parseAndApplyCSV(csvText) {
     else if (key === "Bottom Type") q.bottomType = val;
     else if (key === "HDPE Thickness (mm)") q.hdpeThickness = val;
     else if (key === "XLPE Thickness (mm)") q.xlpeThickness = val;
-    else if (key === "Sheet 1 (Sheet 2) L x H x Qty") q.sheet1 = val;
     else if (key === "Netted Tape") q.nettedTape = val;
     else if (key === "Dust Cover") q.dustCover = val;
     else if (key === "Rivet Material") q.rivetMaterial = val;
@@ -700,7 +1022,7 @@ function parseAndApplyCSV(csvText) {
       }
     } else if (key.startsWith("Cost:")) {
       const matName = key.replace("Cost:", "").split("(")[0].trim();
-      const mat = q.materials.find(m => m.name.toLowerCase() === matName.toLowerCase());
+      const mat = q.materials.find(m => m.name.toLowerCase().startsWith(matName.toLowerCase()));
       if (mat && val) {
         const parts = val.split(/x|=/).map(p => p.trim());
         mat.qty = parseFloat(parts[0]) || 0;
@@ -716,6 +1038,10 @@ function parseAndApplyCSV(csvText) {
       q.notes = val;
     }
   });
+
+  if (parsedPartitions.length > 0) {
+    q.partitions = parsedPartitions;
+  }
 
   loadQuoteData(activeQuoteId);
 }

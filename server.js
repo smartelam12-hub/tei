@@ -321,7 +321,9 @@ function seedDefaultUsersAndWorkflow() {
       bottomType: 'Reinforced Mesh',
       hdpeThickness: '3.0',
       xlpeThickness: '10.0',
-      sheet1: '560 x 280 x 4',
+      partitions: [
+        { material: "HDPE 3 MM", l: 560, h: 150, qty: 6, weldingCost: 0 }
+      ],
       nettedTape: 'Yes',
       dustCover: 'Yes',
       plasticLid: 'No',
@@ -349,8 +351,8 @@ function seedDefaultUsersAndWorkflow() {
     const step4Demo = {
       materials: [
         { id: 'plasticCrate', name: 'Plastic crate', qty: 1, rate: 580, amount: 580.00 },
-        { id: 'hdpeSheet', name: 'HDPE sheet', qty: 1, rate: 120, amount: 120.00 },
-        { id: 'xlpeSheet', name: 'XLPE sheet', qty: 2, rate: 85, amount: 170.00 },
+        { id: 'hdpeSheet', name: 'HDPE sheet (Partitions)', qty: 1, rate: 348.52, amount: 348.52 },
+        { id: 'xlpeSheet', name: 'XLPE sheet (Fitments)', qty: 0, rate: 0, amount: 0.00 },
         { id: 'nettedTape', name: 'Netted tape', qty: 4, rate: 8, amount: 32.00 },
         { id: 'dustCover', name: 'Dust cover', qty: 1, rate: 75, amount: 75.00 },
         { id: 'rivets', name: 'Rivets', qty: 16, rate: 1.5, amount: 24.00 },

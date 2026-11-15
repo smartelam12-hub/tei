@@ -3,17 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FAF8FF" />
+  <meta name="color-scheme" content="light" />
   <title>TEI PACKAGE | Custom Crate Quotation & Billing System</title>
   <meta name="description" content="Official Quotation & Bill Generator for TEI PACKAGE: Plastic Crates, Bins, FLCs, Labour & Material Estimator, GST, PDF & Excel export.">
+  
+  <!-- Google Fonts: Fraunces & Inter (Tactile Claymorphism Editorial) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261112b">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23173b35'/><text x='50%' y='62%' font-size='42' font-weight='900' fill='%23c58b48' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/style.css?v=20261115c">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='favG' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%230072F5'/><stop offset='100%25' stop-color='%23FF7A59'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23favG)'/><text x='50%25' y='63%25' font-size='42' font-weight='900' fill='%23FFFFFF' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
   <style>
-    /* Zero-flash liquid glass init — strictly scoped to body.lg-login-active */
+    /* Zero-flash claymorphic init — strictly scoped to body.lg-login-active */
     html, body.lg-login-active { margin: 0; padding: 0; min-height: 100vh; }
-    body.lg-login-active { background: #071410 !important; }
+    body.lg-login-active { background: #FAF8FF !important; }
     body.lg-login-active .announcement-bar,
     body.lg-login-active .server-status-strip,
     body.lg-login-active .navbar,
@@ -21,6 +29,12 @@
   </style>
 </head>
 <body class="lg-login-active">
+
+  <!-- Ambient Clay Background Glows -->
+  <div class="clay-ambient-backdrop">
+    <div class="clay-ambient-shape top-left"></div>
+    <div class="clay-ambient-shape bottom-right"></div>
+  </div>
 
   <!-- Announcement Bar -->
   <div class="announcement-bar">
@@ -140,16 +154,13 @@
         <div class="lg-particle lg-p3"></div>
 
         <div class="lg-form-logo">
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-            <circle cx="22" cy="22" r="21" fill="url(#lgGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-            <text x="22" y="27" text-anchor="middle" font-size="13" font-weight="900" fill="white" font-family="Arial">TEI</text>
-            <defs>
-              <radialGradient id="lgGrad" cx="35%" cy="30%">
-                <stop offset="0%" stop-color="#c58b48"/>
-                <stop offset="100%" stop-color="#173b35"/>
-              </radialGradient>
-            </defs>
-          </svg>
+          <div class="clay-squircle" style="width: 58px; height: 58px; margin: 0 auto 12px; border-radius: 18px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="13" width="4" height="8" rx="1.5" fill="#0072F5"/>
+              <rect x="10" y="8" width="4" height="13" rx="1.5" fill="#38BDF8"/>
+              <rect x="17" y="3" width="4" height="18" rx="1.5" fill="#FF7A59"/>
+            </svg>
+          </div>
         </div>
 
         <h3 class="lg-form-title">Portal Sign In</h3>
@@ -270,7 +281,7 @@
       <div id="viewCrateEstimator">
 
         <!-- Top Size / Quotation Tabs Bar (Owner only) -->
-        <div id="quoteSizeTabsBox" style="background: white; padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 16px; display: none;">
+        <div id="quoteSizeTabsBox" style="background: var(--bg-surface-glass); padding: 14px 18px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 16px; display: none;">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
             <div>
               <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 1px;">Quotation Size Tabs:</span>
@@ -418,24 +429,64 @@
                 </div>
               </div>
 
-              <!-- Extra Features & Fitments -->
-              <h4 style="font-size: 13px; color: var(--ink); margin: 18px 0 10px; border-top: 1px solid var(--line-light); padding-top: 12px;">
-                Fitments & Partition Details
-              </h4>
-              <div class="form-grid-3">
-                <div class="form-group">
-                  <label>HDPE Thickness (mm)</label>
-                  <input type="text" id="estHdpeThickness" class="form-control" placeholder="e.g. 3.0" oninput="updateSpecField('hdpeThickness', this.value)">
-                </div>
-                <div class="form-group">
-                  <label>XLPE Thickness (mm)</label>
-                  <input type="text" id="estXlpeThickness" class="form-control" placeholder="e.g. 10.0" oninput="updateSpecField('xlpeThickness', this.value)">
-                </div>
-                <div class="form-group">
-                  <label>Sheet 1 (Sheet 2) L x H x Qty</label>
-                  <input type="text" id="estSheet1" class="form-control" placeholder="550 x 350 x 2" oninput="updateSpecField('sheet1', this.value)">
+              <!-- Crate Partition & Sheet Dimension Formula Matrix (Replaces duplicate dummy data) -->
+              <div style="margin-top: 20px; border-top: 1px solid var(--line-light); padding-top: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                  <div>
+                    <h4 style="font-size: 14px; color: var(--ink); margin: 0; display: flex; align-items: center; gap: 6px;">
+                      <span>📐</span> Partition &amp; Sheet Dimension Matrix (Cost Break Down Formula)
+                    </h4>
+                    <p style="font-size: 12px; color: var(--muted); margin: 2px 0 0;">
+                      Calculated from standard sheet dimensions (2000x1200 mm), cutting yield &amp; 1.2 wastage factor.
+                    </p>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="toggleMasterRatesModal()" style="font-size: 11.5px;">
+                    📊 View Raw Material Standards
+                  </button>
                 </div>
 
+                <!-- Interactive Partition Table (Clean, Non-Duplicate Data) -->
+                <div class="table-responsive">
+                  <table class="table-compact" style="font-size: 12.5px;">
+                    <thead>
+                      <tr>
+                        <th style="min-width: 130px; font-size: 12.5px;">Material</th>
+                        <th style="width: 40px; text-align: center; font-size: 12.5px;">#</th>
+                        <th style="width: 105px; min-width: 105px; text-align: center; font-size: 13.5px; font-weight: 800; color: var(--power-blue);">L (mm)</th>
+                        <th style="width: 105px; min-width: 105px; text-align: center; font-size: 13.5px; font-weight: 800; color: var(--power-blue);">H (mm)</th>
+                        <th style="width: 95px; min-width: 95px; text-align: center; font-size: 12.5px;">Sheets / Bin</th>
+                        <th style="width: 110px; min-width: 110px; text-align: right; font-size: 12.5px;">Total Size (mm²)</th>
+                        <th style="width: 95px; min-width: 95px; text-align: center; font-size: 12.5px;">Yield / Sheet</th>
+                        <th style="width: 105px; min-width: 105px; text-align: right; font-size: 12.5px;">Sheet Cost (₹)</th>
+                        <th style="width: 95px; min-width: 95px; text-align: center; font-size: 12.5px;">Weld/Glue (₹)</th>
+                        <th style="width: 115px; min-width: 115px; text-align: right; font-size: 12.5px;">Total Cost (₹)</th>
+                        <th style="width: 40px; text-align: center;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="partitionsTbody">
+                      <!-- Dynamically rendered via crate-estimator.js without duplicate NaN rows -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 10px;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="addNewPartitionRow()">
+                    ➕ Add Partition Piece
+                  </button>
+                  <div style="display: flex; gap: 14px; font-size: 12px; color: var(--muted); align-items: center; flex-wrap: wrap;">
+                    <span>Total Area: <strong id="partTotalArea" style="color: var(--ink);">0 mm²</strong></span>
+                    <span>HDPE Cost: <strong id="partHdpeCost" style="color: var(--purple-primary);">₹0.00</strong></span>
+                    <span>XLPE Cost: <strong id="partXlpeCost" style="color: var(--purple-primary);">₹0.00</strong></span>
+                    <span>Total Partition / Bin: <strong id="partGrandCost" style="font-size: 13.5px; color: var(--purple-primary);">₹0.00</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extra Features & Fitments -->
+              <h4 style="font-size: 13px; color: var(--ink); margin: 20px 0 10px; border-top: 1px solid var(--line-light); padding-top: 14px;">
+                Additional Fitments &amp; Hardware
+              </h4>
+              <div class="form-grid-3">
                 <div class="form-group">
                   <label>Netted Tape</label>
                   <select id="estNettedTape" class="form-control" onchange="updateSpecField('nettedTape', this.value)">
@@ -483,7 +534,7 @@
                   <input type="text" id="estCardHolderColour" class="form-control" placeholder="Transparent" oninput="updateSpecField('cardHolderColour', this.value)">
                 </div>
                 <div class="form-group">
-                  <label>Card Holder Size & Pockets</label>
+                  <label>Card Holder Size &amp; Pockets</label>
                   <input type="text" id="estCardHolderSize" class="form-control" placeholder="150x100 mm (1 pocket)" oninput="updateSpecField('cardHolderSize', this.value)">
                 </div>
               </div>
@@ -522,12 +573,12 @@
                 <table class="table-compact">
                   <thead>
                     <tr>
-                      <th>Operation</th>
-                      <th style="width: 65px; text-align: right;">Min</th>
-                      <th style="width: 55px; text-align: right;">Hrs</th>
-                      <th style="width: 70px; text-align: right;">Man-Hrs</th>
-                      <th style="width: 75px; text-align: right;">Rate (₹)</th>
-                      <th style="width: 90px; text-align: right;">Amount (₹)</th>
+                      <th style="min-width: 140px; font-size: 12.5px;">Operation</th>
+                      <th style="width: 100px; min-width: 100px; text-align: center; font-size: 13.5px; font-weight: 800; color: var(--power-blue);">Min</th>
+                      <th style="width: 75px; min-width: 75px; text-align: right; font-size: 12.5px;">Hrs</th>
+                      <th style="width: 110px; min-width: 110px; text-align: center; font-size: 13.5px; font-weight: 800; color: var(--power-blue);">Man-Hrs</th>
+                      <th style="width: 110px; min-width: 110px; text-align: center; font-size: 13.5px; font-weight: 800; color: var(--power-blue);">Rate (₹)</th>
+                      <th style="width: 115px; min-width: 115px; text-align: right; font-size: 12.5px;">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody id="workOpsTbody">
@@ -605,7 +656,7 @@
                 <span>Unit Labour Cost:</span>
                 <strong id="estLabourTotalVal">₹0.00</strong>
               </div>
-              <div class="summary-line" style="background: #fafcfb; padding: 10px;">
+              <div class="summary-line" style="background: rgba(255, 255, 255, 0.04); padding: 10px; border-radius: var(--radius-sm);">
                 <span style="font-weight: 700; color: var(--ink);">Unit Finished Crate Cost:</span>
                 <strong id="estUnitCost" style="font-size: 16px; color: var(--ink);">₹0.00</strong>
               </div>
@@ -648,7 +699,7 @@
 
               <div id="ownerSummaryPrintButtons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px;">
                 <button class="btn btn-primary" onclick="triggerEstimatorPrint()">🖨️ Print Quotation</button>
-                <button class="btn btn-secondary" style="color: var(--ink); background: #e8f0ec;" onclick="switchToolTab('print')">👁️ View Official Bill</button>
+                <button class="btn btn-secondary" onclick="switchToolTab('print')">👁️ View Official Bill</button>
               </div>
             </div>
 
@@ -693,7 +744,7 @@
         <!-- Standard Invoice Action Toolbar -->
         <div class="action-bar" style="margin-bottom: 16px;">
           <button class="btn btn-outline btn-sm" onclick="startNewQuotation()">➕ New Quotation</button>
-          <button class="btn btn-primary btn-sm" style="background:#15803d; border-color:#15803d;" onclick="saveQuotationDraft()">💾 Save to Database</button>
+          <button class="btn btn-success btn-sm" onclick="saveQuotationDraft()">💾 Save to Database</button>
           <button class="btn btn-outline btn-sm" onclick="exportExcelCSV()">📊 Export Excel (CSV)</button>
           <button class="btn btn-primary btn-sm" onclick="printActiveQuotation()">🖨️ Print / Save PDF</button>
           <button class="btn btn-success btn-sm" onclick="shareViaWhatsApp()">💬 Share on WhatsApp</button>
@@ -1187,6 +1238,39 @@
           <button type="submit" class="btn btn-danger">Send Remark to Admin</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Master Material Standards ("Cost Break Down") Modal -->
+  <div id="masterRatesModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 720px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0; font-size: 17px; color: var(--ink);">📊 Cost Break Down — Master Raw Material Standards</h3>
+        <button type="button" class="btn btn-outline btn-sm" onclick="toggleMasterRatesModal()">✕</button>
+      </div>
+      <p style="font-size: 12.5px; color: var(--muted); margin-bottom: 14px;">
+        Industrial standard dimensions, prices and 1.2 (20%) wastage factors used in Crate Dimensions &amp; Partition calculations.
+      </p>
+      <div class="table-responsive">
+        <table class="table-compact" style="font-size: 12px;">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th style="text-align: right;">Std Length (A) (mm)</th>
+              <th style="text-align: right;">Std Breadth (B) (mm)</th>
+              <th style="text-align: right;">Price (₹)</th>
+              <th style="text-align: right;">Total Size (mm²)</th>
+              <th style="text-align: right;">% Wastage</th>
+            </tr>
+          </thead>
+          <tbody id="masterRatesTbody">
+            <!-- Dynamically populated via crate-estimator.js -->
+          </tbody>
+        </table>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+        <button type="button" class="btn btn-primary btn-sm" onclick="toggleMasterRatesModal()">Close</button>
+      </div>
     </div>
   </div>
 

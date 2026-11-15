@@ -3,17 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TEI PACKAGE | Industrial Packaging Solutions & Quotation Bill Generator</title>
+  <meta name="theme-color" content="#FAF8FF" />
+  <meta name="color-scheme" content="light" />
+  <title>TEI PACKAGE | Industrial Packaging Solutions &amp; Quotation Bill Generator</title>
   <meta name="description" content="TEI PACKAGE - Leading Manufacturer of Plastic Crates, Industrial Storage Bins, Foldable Large Containers (FLC), Pallets, ESD & Returnable Packaging in Hosur, Tamil Nadu. Instant online quotation & bill generator.">
   <meta name="keywords" content="TEI Package, teipackage.com, plastic crates hosur, industrial bins, FLC containers, returnable packaging, quotation bill generator">
   
+  <!-- Google Fonts: Fraunces & Inter (Tactile Claymorphism Editorial) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
   
-  <!-- Favicon placeholder with SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23173b35'/><text x='50%' y='62%' font-size='42' font-weight='900' fill='%23c58b48' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
+  <!-- Favicon placeholder with Tactile Claymorphism Gradient (Power Blue & Sunset Peach) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='favG' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%230072F5'/><stop offset='100%25' stop-color='%23FF7A59'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23favG)'/><text x='50%25' y='63%25' font-size='42' font-weight='900' fill='%23FFFFFF' text-anchor='middle' font-family='Arial'>TEI</text></svg>">
 </head>
 <body>
+
+  <!-- Ambient Clay Background Glows -->
+  <div class="clay-ambient-backdrop">
+    <div class="clay-ambient-shape top-left"></div>
+    <div class="clay-ambient-shape bottom-right"></div>
+  </div>
 
   <!-- Announcement Bar -->
   <div class="announcement-bar">
@@ -58,6 +74,7 @@
         <li><a href="#home" class="active">Home</a></li>
         <li><a href="#products">Products</a></li>
         <li><a href="#quotation-tool">Quotation Tool</a></li>
+        <li><a href="quotation.html" style="color: var(--purple-primary); font-weight: 700;">⚙️ 4-Step Portal</a></li>
         <li><a href="#database-hub" style="color: #fde68a; font-weight: 600;">📊 Live Database</a></li>
         <li><a href="#about">About Us</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -98,7 +115,7 @@
       </div>
 
       <div class="hero-card">
-        <h3>Custom Crate & Bill Estimator</h3>
+        <h3>Custom Crate &amp; Bill Estimator</h3>
         <p>Calculate labour, material costs (HDPE/XLPE, rivets, netted tape, dust covers), and print formal A4 quotation bills for purchase orders in 60 seconds.</p>
         <div class="hero-quick-list">
           <div class="quick-item">
@@ -108,10 +125,10 @@
             <i>✔</i> <span>Work Matrix (Cutting, Drilling, Welding, Painting)</span>
           </div>
           <div class="quick-item">
-            <i>✔</i> <span>Direct Print / PDF, Exact TEI CSV Export & WhatsApp</span>
+            <i>✔</i> <span>Direct Print / PDF, Exact TEI CSV Export &amp; WhatsApp</span>
           </div>
         </div>
-        <a href="quotation.html" class="btn btn-primary full">Open Full Quotation Tool →</a>
+        <a href="quotation.html" class="btn btn-peach full">Open Full Quotation Tool →</a>
       </div>
     </div>
   </section>
@@ -325,7 +342,7 @@
       <!-- Quick Action Toolbar -->
       <div class="action-bar">
         <button class="btn btn-outline btn-sm" onclick="startNewQuotation()">➕ New Quotation</button>
-        <button class="btn btn-primary btn-sm" style="background:#15803d; border-color:#15803d;" onclick="saveQuotationDraft()">💾 Save to Database</button>
+        <button class="btn btn-success btn-sm" onclick="saveQuotationDraft()">💾 Save to Database</button>
         <a href="#database-hub" class="btn btn-outline btn-sm">📊 View DB Records</a>
         <button class="btn btn-outline btn-sm" onclick="openHistoryModal()">📂 Local Drafts <span id="historyCountBadge"></span></button>
         <button class="btn btn-outline btn-sm" onclick="exportExcelCSV()">📊 Export Excel (CSV)</button>
@@ -522,7 +539,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px;">
               <button class="btn btn-primary" onclick="triggerPrint()">🖨️ Print Quotation</button>
-              <button class="btn btn-secondary" style="color: var(--ink); background: #e6ede9;" onclick="switchViewMode('preview')">👁️ View Official Bill</button>
+              <button class="btn btn-secondary" onclick="switchViewMode('preview')">👁️ View Official Bill</button>
             </div>
           </div>
 
@@ -690,7 +707,7 @@
       <div class="metrics-row">
         <div class="metric-card accent-green">
           <div class="metric-title">Database Status</div>
-          <div class="metric-value" style="font-size: 22px; color: #15803d;">Active (WAL)</div>
+          <div class="metric-value" style="font-size: 22px; color: var(--success);">Active (WAL)</div>
           <div class="metric-sub">Concurrent Multi-Reader/Writer</div>
         </div>
         <div class="metric-card accent-amber">
@@ -820,14 +837,14 @@
     <div class="footer-container">
       <div>
         <strong>TEI PACKAGE</strong> • Industrial Packaging & Material Handling Solutions (Hosur, TN)
-        <div style="font-size: 11px; color: #7f978e; margin-top: 3px;">
+        <div style="font-size: 11.5px; color: #71717A; margin-top: 3px;">
           Domain: teipackage.com • Quotation Bill Generator v2.0
         </div>
       </div>
       <div>
-        <a href="#quotation-tool" style="color: #f3c88d; margin-right: 15px;">Create Quotation Bill</a>
-        <a href="#products" style="color: #d1ded7; margin-right: 15px;">Products</a>
-        <a href="#contact" style="color: #d1ded7;">Contact</a>
+        <a href="#quotation-tool" style="color: var(--accent-bright); margin-right: 18px;">Create Quotation Bill</a>
+        <a href="#products" style="color: #A1A1AA; margin-right: 18px;">Products</a>
+        <a href="#contact" style="color: #A1A1AA;">Contact</a>
       </div>
     </div>
   </footer>

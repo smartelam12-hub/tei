@@ -196,7 +196,9 @@
         bottomType: 'Reinforced Mesh',
         hdpeThickness: '3.0',
         xlpeThickness: '10.0',
-        sheet1: '560 x 280 x 4',
+        partitions: [
+          { material: "HDPE 3 MM", l: 560, h: 150, qty: 6, weldingCost: 0 }
+        ],
         nettedTape: 'Yes',
         dustCover: 'Yes',
         plasticLid: 'No',
@@ -230,8 +232,8 @@
       step4: {
         materials: [
           { id: 'plasticCrate', name: 'Plastic crate', qty: 1, rate: 580, amount: 580.00 },
-          { id: 'hdpeSheet', name: 'HDPE sheet', qty: 1, rate: 120, amount: 120.00 },
-          { id: 'xlpeSheet', name: 'XLPE sheet', qty: 2, rate: 85, amount: 170.00 },
+          { id: 'hdpeSheet', name: 'HDPE sheet (Partitions)', qty: 1, rate: 348.52, amount: 348.52 },
+          { id: 'xlpeSheet', name: 'XLPE sheet (Fitments)', qty: 0, rate: 0, amount: 0.00 },
           { id: 'nettedTape', name: 'Netted tape', qty: 4, rate: 8, amount: 32.00 },
           { id: 'dustCover', name: 'Dust cover', qty: 1, rate: 75, amount: 75.00 },
           { id: 'rivets', name: 'Rivets', qty: 16, rate: 1.5, amount: 24.00 },
@@ -881,7 +883,11 @@
       bottomType: s2.bottomType || '',
       hdpeThickness: s2.hdpeThickness || '',
       xlpeThickness: s2.xlpeThickness || '',
-      sheet1: s2.sheet1 || ' x  x ',
+      partitions: Array.isArray(s2.partitions) && s2.partitions.length > 0 
+        ? JSON.parse(JSON.stringify(s2.partitions)) 
+        : [
+            { material: "HDPE 3 MM", l: 560, h: 150, qty: 6, weldingCost: 0 }
+          ],
       nettedTape: s2.nettedTape || 'Yes',
       dustCover: s2.dustCover || 'Yes',
       plasticLid: s2.plasticLid || 'No',
@@ -939,6 +945,8 @@
     }
 
     if (step === 2) {
+      const quotesArr = getEstimatorQuotes();
+      const activeQuote = (quotesArr && quotesArr.find(item => item.id === (window.activeQuoteId || (quotesArr[0] && quotesArr[0].id)))) || (quotesArr && quotesArr[0]) || {};
       return {
         partName: val('estPartName').trim(),
         partNo: val('estPartNo').trim(),
@@ -954,7 +962,7 @@
         bottomType: val('estBottomType').trim(),
         hdpeThickness: val('estHdpeThickness').trim(),
         xlpeThickness: val('estXlpeThickness').trim(),
-        sheet1: val('estSheet1').trim(),
+        partitions: Array.isArray(activeQuote.partitions) ? JSON.parse(JSON.stringify(activeQuote.partitions)) : [],
         nettedTape: val('estNettedTape'),
         dustCover: val('estDustCover'),
         plasticLid: val('estPlasticLid'),
