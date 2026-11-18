@@ -49,6 +49,21 @@ function initCategoryFilter() {
 }
 
 function initSmoothScroll() {
+  const navbar = document.querySelector(".navbar");
+  const navLinks = document.querySelectorAll("#navMenu a");
+
+  // Sticky navbar shadow & liquid depth on scroll
+  window.addEventListener("scroll", () => {
+    if (navbar) {
+      if (window.scrollY > 20) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    }
+  }, { passive: true });
+
+  // Smooth scroll & instant active indicator switch
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener("click", function(e) {
       const targetId = this.getAttribute("href");
@@ -59,9 +74,41 @@ function initSmoothScroll() {
         targetElement.scrollIntoView({
           behavior: "smooth"
         });
+
+        // Set active tab if clicked link is inside navMenu
+        if (this.closest("#navMenu")) {
+          navLinks.forEach(link => link.classList.remove("active"));
+          this.classList.add("active");
+        }
       }
     });
   });
+
+  // ScrollSpy: Automatically update active nav link as sections scroll into view
+  const sections = ["home", "products", "quotation-tool", "database-hub", "about", "contact"]
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  if ("IntersectionObserver" in window && sections.length > 0) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const currentId = "#" + entry.target.id;
+          navLinks.forEach(link => {
+            if (link.getAttribute("href") === currentId) {
+              link.classList.add("active");
+            } else if (link.getAttribute("href").startsWith("#")) {
+              link.classList.remove("active");
+            }
+          });
+        }
+      });
+    }, {
+      rootMargin: "-20% 0px -60% 0px"
+    });
+
+    sections.forEach(sec => observer.observe(sec));
+  }
 }
 
 // Function called when user clicks "Add to Quote" from website product cards

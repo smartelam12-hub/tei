@@ -373,25 +373,45 @@ a:hover {
 }
 
 /* ==========================================================================
-   NAVIGATION (Tactile Floating Clay Bar)
+   NAVIGATION (Liquid Glass Floating Island & Refraction Bar)
    ========================================================================== */
 
 .navbar {
-  background: var(--clay-surface);
   position: sticky;
   top: 0;
-  z-index: 100;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 30px -5px rgba(70, 90, 140, 0.08), inset 0 -2px 4px rgba(165, 185, 220, 0.15);
+  z-index: 1000;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(245, 248, 255, 0.52) 45%, rgba(255, 246, 244, 0.62) 100%);
+  backdrop-filter: blur(28px) saturate(210%) contrast(102%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%) contrast(102%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 
+    0 16px 40px -10px rgba(0, 114, 245, 0.12),
+    0 4px 16px -2px rgba(15, 23, 42, 0.04),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 3px 0 rgba(0, 114, 245, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
 }
+
+.navbar.scrolled {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 248, 255, 0.68) 50%, rgba(255, 246, 244, 0.78) 100%);
+  box-shadow: 
+    0 20px 48px -10px rgba(0, 114, 245, 0.18),
+    0 6px 20px -2px rgba(15, 23, 42, 0.06),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 3px 0 rgba(0, 114, 245, 0.08);
+}
+
 .nav-container {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  position: relative;
 }
 
 .brand {
@@ -399,67 +419,172 @@ a:hover {
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  transition: transform 0.25s ease;
+}
+.brand:hover {
+  transform: translateY(-1px);
 }
 .brand-mark {
   width: 44px;
   height: 44px;
-  background: linear-gradient(135deg, var(--power-blue) 0%, #2563EB 50%, var(--sunset-peach) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  border-radius: var(--clay-radius-md);
+  background: linear-gradient(135deg, #0072F5 0%, #2563EB 50%, #FF7A59 100%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
   display: grid;
   place-items: center;
   font-weight: 900;
   letter-spacing: 1.5px;
   color: #FFFFFF;
   font-size: 16px;
-  box-shadow: 6px 10px 22px rgba(0, 114, 245, 0.35), inset -3px -3px 6px rgba(0, 45, 130, 0.40), inset 3px 3px 6px rgba(255, 255, 255, 0.50);
+  box-shadow: 
+    0 10px 24px rgba(0, 114, 245, 0.35),
+    inset -2px -2px 6px rgba(0, 45, 130, 0.4),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.65);
   font-family: var(--font-display);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
 }
+.brand-mark::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.45) 50%, transparent 60%);
+  animation: liquidSheen 4.5s infinite linear;
+}
+@keyframes liquidSheen {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  35%, 100% { transform: translateX(100%) rotate(25deg); }
+}
+
 .brand-info h1 {
   font-size: 19px;
   color: var(--ink);
-  letter-spacing: 0.5px;
+  letter-spacing: -0.3px;
   margin: 0;
-  font-weight: 700;
+  font-weight: 800;
   font-family: var(--font-display);
+  line-height: 1.2;
 }
 .brand-info p {
   font-size: 10px;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
   color: #64748B;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
+/* Liquid Glass Navigation Island Tray */
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 4px;
   list-style: none;
+  margin: 0;
+  padding: 5px 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(245, 249, 255, 0.45) 50%, rgba(255, 248, 246, 0.55) 100%);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
+  box-shadow: 
+    inset 0 1.5px 3px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 2px 0 rgba(0, 114, 245, 0.06),
+    0 10px 24px -4px rgba(0, 114, 245, 0.08),
+    0 2px 6px 0 rgba(15, 23, 42, 0.03);
+  position: relative;
 }
+
+.nav-menu li {
+  display: inline-flex;
+  position: relative;
+}
+
 .nav-menu a {
-  color: #475569;
+  color: #334155;
   font-size: 13.5px;
   font-weight: 600;
-  padding: 6px 4px;
+  padding: 8px 16px;
+  border-radius: 9999px;
   position: relative;
-  transition: color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  letter-spacing: -0.1px;
 }
-.nav-menu a:hover,
+
+/* Liquid droplet hover effect */
+.nav-menu a:hover {
+  color: var(--power-blue);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 246, 255, 0.7) 100%);
+  box-shadow: 0 4px 14px rgba(0, 114, 245, 0.12), inset 0 1px 2px rgba(255, 255, 255, 1);
+  transform: translateY(-1.5px);
+}
+
+/* Active State — Liquid Glow & Underline Bar */
 .nav-menu a.active {
-  color: var(--purple-primary);
+  color: #0072F5 !important;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 244, 255, 0.85) 100%);
+  box-shadow: 0 4px 16px rgba(0, 114, 245, 0.14), inset 0 1.5px 2px rgba(255, 255, 255, 1);
 }
+
+/* The Glowing Liquid Rounded Bar Underneath */
 .nav-menu a.active::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--power-blue), var(--sunset-peach));
-  box-shadow: 0 0 8px rgba(0, 114, 245, 0.4);
-  border-radius: 3px;
+  bottom: 2px;
+  left: 14px;
+  right: 14px;
+  height: 3.5px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #0072F5 0%, #3B82F6 45%, #FF7A59 100%);
+  box-shadow: 
+    0 0 12px rgba(0, 114, 245, 0.85),
+    0 2px 6px rgba(255, 122, 89, 0.65);
+  animation: liquidGlowPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes liquidGlowPulse {
+  0% {
+    box-shadow: 0 0 8px rgba(0, 114, 245, 0.7), 0 1.5px 4px rgba(255, 122, 89, 0.5);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(0, 114, 245, 0.95), 0 3px 10px rgba(255, 122, 89, 0.8);
+    filter: brightness(1.2);
+  }
+}
+
+/* 4-Step Portal Link Accent */
+.nav-menu a.nav-link-portal,
+.nav-menu a[href*="quotation.html"] {
+  color: #0072F5 !important;
+  font-weight: 700;
+}
+.nav-menu a.nav-link-portal:hover,
+.nav-menu a[href*="quotation.html"]:hover {
+  background: linear-gradient(135deg, rgba(235, 244, 255, 0.95) 0%, rgba(224, 237, 255, 0.85) 100%);
+  box-shadow: 0 4px 14px rgba(0, 114, 245, 0.2), inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+/* Live Database Link Accent */
+.nav-menu a.nav-link-db,
+.nav-menu a[href*="database-hub"] {
+  color: #D97706 !important;
+  font-weight: 700;
+}
+.nav-menu a.nav-link-db:hover,
+.nav-menu a[href*="database-hub"]:hover {
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.95) 0%, rgba(253, 230, 138, 0.85) 100%);
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.2), inset 0 1px 2px rgba(255, 255, 255, 1);
 }
 
 .nav-actions {
@@ -468,15 +593,127 @@ a:hover {
   gap: 12px;
 }
 
+.nav-actions .btn-primary {
+  background: linear-gradient(135deg, #0072F5 0%, #2563EB 55%, #1D4ED8 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-radius: 9999px;
+  box-shadow: 
+    0 8px 24px -2px rgba(0, 114, 245, 0.4),
+    inset 0 2px 3px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 3px rgba(0, 30, 100, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 10px 22px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #FFFFFF;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav-actions .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 30px -2px rgba(0, 114, 245, 0.55),
+    0 4px 14px rgba(255, 122, 89, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7);
+}
+
+.nav-actions .btn-secondary {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(245, 248, 255, 0.55) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 9999px;
+  color: #0072F5 !important;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 114, 245, 0.08), inset 0 1px 2px rgba(255, 255, 255, 1);
+  padding: 8px 18px;
+  font-size: 13px;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-actions .btn-secondary:hover {
+  background: #FFFFFF;
+  color: #005bc4 !important;
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 20px rgba(0, 114, 245, 0.15), inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
 .menu-toggle {
   display: none;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid var(--line-light);
-  color: var(--ink);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(245, 248, 255, 0.6) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  color: #0072F5;
   font-size: 20px;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 114, 245, 0.12), inset 0 1px 2px rgba(255, 255, 255, 1);
+  transition: all 0.25s ease;
+  align-items: center;
+  justify-content: center;
+}
+.menu-toggle:hover {
+  background: #FFFFFF;
+  transform: scale(1.04);
+}
+
+/* Mobile Liquid Glass Menu Drawer */
+@media (max-width: 992px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+  .nav-menu {
+    display: none;
+  }
+  .nav-menu.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 16px;
+    right: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(245, 248, 255, 0.9) 100%);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 114, 245, 0.18), inset 0 2px 4px rgba(255, 255, 255, 0.95);
+    padding: 14px;
+    gap: 6px;
+    z-index: 1001;
+    animation: liquidMenuSlide 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-menu.open li {
+    width: 100%;
+  }
+  .nav-menu.open a {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: 14px;
+  }
+  .nav-actions {
+    display: none;
+  }
+}
+
+@keyframes liquidMenuSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ==========================================================================
