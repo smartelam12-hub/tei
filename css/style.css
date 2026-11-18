@@ -500,9 +500,146 @@ a:hover {
   position: relative;
 }
 
+/* ==========================================================================
+   LIQUID METAL NAVIGATION GLIDER (Molten Mercury Movement & Specular Shine)
+   ========================================================================== */
+
+.nav-liquid-glider {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: 
+    transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+  opacity: 0;
+  will-change: transform, width;
+}
+
+.nav-menu.glider-ready .nav-liquid-glider {
+  opacity: 1;
+}
+
+/* Liquid Metal Pill (Molten Mercury Backdrop) */
+.liquid-glider-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(
+    135deg, 
+    rgba(255, 255, 255, 0.98) 0%, 
+    rgba(224, 238, 255, 0.92) 28%, 
+    rgba(255, 255, 255, 1) 48%, 
+    rgba(220, 235, 255, 0.88) 68%, 
+    rgba(255, 240, 235, 0.94) 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.98);
+  box-shadow: 
+    0 4px 18px rgba(0, 114, 245, 0.16),
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    inset 0 1.5px 2px #FFFFFF,
+    inset 0 -1.5px 3px rgba(0, 114, 245, 0.10);
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+}
+
+/* Liquid Metal Specular Light Sweep across the pill */
+.liquid-glider-pill::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 260%;
+  height: 220%;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.35) 42%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(147, 197, 253, 0.45) 56%,
+    transparent 72%
+  );
+  transform: rotate(18deg);
+  animation: liquidMetalShine 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes liquidMetalShine {
+  0% { transform: translateX(-100%) rotate(18deg); }
+  45%, 100% { transform: translateX(100%) rotate(18deg); }
+}
+
+/* Liquid Metal Underline Bar (Fluid Glowing Capsule) */
+.liquid-glider-line {
+  position: absolute;
+  bottom: 2px;
+  left: 14px;
+  right: 14px;
+  height: 3.5px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg, 
+    #0072F5 0%, 
+    #3B82F6 26%, 
+    #93C5FD 46%, 
+    #FFFFFF 50%, 
+    #60A5FA 54%, 
+    #3B82F6 74%, 
+    #FF7A59 100%
+  );
+  background-size: 200% 100%;
+  box-shadow: 
+    0 0 14px rgba(0, 114, 245, 0.90),
+    0 2px 8px rgba(255, 122, 89, 0.70),
+    inset 0 1px 1px #FFFFFF;
+  filter: drop-shadow(0 2px 6px rgba(0, 114, 245, 0.75));
+  animation: liquidMetalPulse 2.6s ease-in-out infinite alternate, liquidFlowWave 4s linear infinite;
+  transition: left 0.3s ease, right 0.3s ease, background 0.3s ease;
+}
+
+@keyframes liquidMetalPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 114, 245, 0.75), 0 2px 6px rgba(255, 122, 89, 0.55);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: 0 0 18px rgba(0, 114, 245, 1), 0 3px 12px rgba(255, 122, 89, 0.90);
+    filter: brightness(1.25);
+  }
+}
+
+@keyframes liquidFlowWave {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Fluid Stretch Physics when Moving (Viscous Mercury Inertia) */
+.nav-liquid-glider.gliding-right .liquid-glider-pill {
+  transform: scaleX(1.14) scaleY(0.92);
+}
+.nav-liquid-glider.gliding-left .liquid-glider-pill {
+  transform: scaleX(1.14) scaleY(0.92);
+}
+
+/* Theme Varied Liquid Metals */
+.nav-liquid-glider.theme-portal .liquid-glider-line {
+  background: linear-gradient(90deg, #4338CA 0%, #6366F1 45%, #FFFFFF 52%, #A855F7 100%);
+  box-shadow: 0 0 14px rgba(99, 102, 241, 0.9), 0 2px 8px rgba(168, 85, 247, 0.7);
+}
+.nav-liquid-glider.theme-db .liquid-glider-line {
+  background: linear-gradient(90deg, #D97706 0%, #F59E0B 45%, #FFFFFF 52%, #FF7A59 100%);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.9), 0 2px 8px rgba(255, 122, 89, 0.7);
+}
+
+/* Nav Menu Items */
 .nav-menu li {
   display: inline-flex;
   position: relative;
+  z-index: 2;
 }
 
 .nav-menu a {
@@ -516,28 +653,28 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: color 0.22s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   letter-spacing: -0.1px;
 }
 
 /* Liquid droplet hover effect */
 .nav-menu a:hover {
   color: var(--power-blue);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 246, 255, 0.7) 100%);
-  box-shadow: 0 4px 14px rgba(0, 114, 245, 0.12), inset 0 1px 2px rgba(255, 255, 255, 1);
   transform: translateY(-1.5px);
 }
 
-/* Active State — Liquid Glow & Underline Bar */
+/* Active State — Highlight Text */
 .nav-menu a.active {
   color: #0072F5 !important;
   font-weight: 700;
+}
+
+/* Fallback underline for non-glider states */
+.nav-menu:not(.glider-ready) a.active {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 244, 255, 0.85) 100%);
   box-shadow: 0 4px 16px rgba(0, 114, 245, 0.14), inset 0 1.5px 2px rgba(255, 255, 255, 1);
 }
-
-/* The Glowing Liquid Rounded Bar Underneath */
-.nav-menu a.active::after {
+.nav-menu:not(.glider-ready) a.active::after {
   content: '';
   position: absolute;
   bottom: 2px;
@@ -546,21 +683,28 @@ a:hover {
   height: 3.5px;
   border-radius: 9999px;
   background: linear-gradient(90deg, #0072F5 0%, #3B82F6 45%, #FF7A59 100%);
-  box-shadow: 
-    0 0 12px rgba(0, 114, 245, 0.85),
-    0 2px 6px rgba(255, 122, 89, 0.65);
-  animation: liquidGlowPulse 2.4s ease-in-out infinite alternate;
+  box-shadow: 0 0 12px rgba(0, 114, 245, 0.85), 0 2px 6px rgba(255, 122, 89, 0.65);
 }
 
-@keyframes liquidGlowPulse {
-  0% {
-    box-shadow: 0 0 8px rgba(0, 114, 245, 0.7), 0 1.5px 4px rgba(255, 122, 89, 0.5);
-    filter: brightness(1);
-  }
-  100% {
-    box-shadow: 0 0 16px rgba(0, 114, 245, 0.95), 0 3px 10px rgba(255, 122, 89, 0.8);
-    filter: brightness(1.2);
-  }
+/* When glider is active, hide static individual pseudo elements */
+.nav-menu.glider-ready a.active::after {
+  display: none !important;
+}
+.nav-menu.glider-ready a.active {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Click Ripple Pulse on the Nav Option */
+.nav-menu a.clicked-ripple {
+  animation: liquidDropRipple 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes liquidDropRipple {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.92); }
+  75% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 /* 4-Step Portal Link Accent */
@@ -671,6 +815,9 @@ a:hover {
   .menu-toggle {
     display: inline-flex;
   }
+  .nav-liquid-glider {
+    display: none !important;
+  }
   .nav-menu {
     display: none;
   }
@@ -699,6 +846,13 @@ a:hover {
     width: 100%;
     padding: 12px 18px;
     border-radius: 14px;
+  }
+  .nav-menu.glider-ready a.active {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(235, 244, 255, 0.85) 100%) !important;
+    box-shadow: 0 4px 16px rgba(0, 114, 245, 0.14) !important;
+  }
+  .nav-menu.glider-ready a.active::after {
+    display: block !important;
   }
   .nav-actions {
     display: none;
@@ -2761,23 +2915,66 @@ footer {
    PRINT MEDIA QUERY FOR PERFECT A4 INVOICE PRINT
    ========================================================================== */
 
+@page {
+  size: A4 portrait;
+  margin: 8mm;
+}
+
 @media print {
-  body {
+  /* Reset document background */
+  html, body {
     background: #FFFFFF !important;
     color: #000000 !important;
-    font-size: 11pt !important;
+    font-size: 10.5pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
   }
+
+  /* HARD SUPPRESSION: Hide every top-level section except the quotation section / printable sheet */
+  body > *:not(.quote-app-section):not(#viewPrintableSheet) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Inside quotation section: hide all controls, toolbars, and edit forms */
+  .quote-app-section > .container > *:not(#quotePreviewView):not(.bill-preview-wrapper) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* STRICT HIDE: Suppress all website banners, navigation, database hub, hero, products, footers, & controls */
   .announcement-bar,
   .navbar,
+  .nav-liquid-glider,
   .server-status-strip,
+  .clay-ambient-backdrop,
+  .clay-ambient-shape,
   .hero,
   .products-section,
+  .hub-section,
+  #database-hub,
+  .hub-header,
+  .hub-stats-grid,
+  .hub-stat-card,
+  .hub-table-wrapper,
   .info-section,
+  #about,
+  #contact,
   footer,
   .app-header-controls,
   .action-bar,
   .quote-editor-container,
+  #quoteEditorView,
   .tool-type-nav,
+  #toolTypeNav,
   #viewCrateEstimator,
   #viewStandardInvoice,
   .btn,
@@ -2789,35 +2986,86 @@ footer {
   .workflow-queue-panel,
   .remark-alert-banner,
   .owner-panel-remark-bar,
-  .step-submit-bar {
+  .step-submit-bar,
+  .wf-progress-strip,
+  #wfStepsStrip,
+  .quote-tabs-bar,
+  #quoteTabsContainer,
+  .quote-tabs-actions,
+  .owner-actions-strip,
+  .panel-cost-summary,
+  .quote-summary-card,
+  .quote-totals-sidebar,
+  .product-desc-box,
+  .menu-toggle,
+  .panel,
+  .category-filter,
+  .category-pill,
+  .product-grid {
     display: none !important;
-  }
-  .quote-app-section {
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
-    background: white !important;
+    overflow: hidden !important;
   }
+
+  /* Container isolation for print view */
+  .quote-app-section,
+  .quote-app-section .container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: #FFFFFF !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Display ONLY printable sheets */
   .bill-preview-wrapper {
     padding: 0 !important;
+    margin: 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     display: block !important;
+    visibility: visible !important;
   }
+
   #viewPrintableSheet,
   #quotePreviewView {
     display: block !important;
+    visibility: visible !important;
   }
+
   .invoice-sheet {
+    display: block !important;
+    visibility: visible !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 0 !important;
+    margin: 0 auto !important;
+    padding: 12px 16px !important;
+    font-size: 11px !important;
+    line-height: 1.35 !important;
     border: none !important;
     box-shadow: none !important;
-    color: black !important;
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    break-after: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
+
   .inv-header {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+    padding-bottom: 12px !important;
+    margin-bottom: 12px !important;
   }
   .inv-items-table th {
     background: #1E1B4B !important;
